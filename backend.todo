@@ -1,0 +1,4 @@
+Create a table collection Firebase with Go.
+Columns should include Recepie name, type, made as False, rating 1-5
+If recipe added you can't add it again.
+Can remove from my recepies
