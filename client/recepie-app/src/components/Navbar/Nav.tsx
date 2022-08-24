@@ -1,16 +1,16 @@
 import React from 'react'
 import { NavLink } from "react-router-dom";
+import Burger from "./SideBar";
 
 
 const Nav: React.FC<{}> = () => {
   return (
     <>
-     <section className="hero is-info is-fullheight">
-        <div className="hero-head">
-            <nav className="navbar">
+            <nav className="navbar is-info hero-head">
                 <div className="container">
                     <div className="navbar-brand">
-                        <a className="navbar-item" href="../">
+                        <a className="navbar-item">
+                            
                            <h1>Recepie App</h1> 
                         </a>
                         <span className="navbar-burger burger" data-target="navbarMenu">
@@ -22,53 +22,49 @@ const Nav: React.FC<{}> = () => {
                     <div id="navbarMenu" className="navbar-menu">
                         <div className="navbar-end">
                             <span className="navbar-item">
-                                <a className="button is-white is-outlined">
+                                <NavLink className="button is-white is-outlined" to="/">
                                     <span className="icon">
                                         <i className="fa fa-home"></i>
                                     </span>
                                     <span>Home</span>
-                                </a>
+                                </NavLink>
                             </span>
                             <span className="navbar-item">
-                                <a className="button is-white is-outlined" href="#">
+                                <NavLink className="button is-white is-outlined" to="keto">
                                     <span className="icon">
                                         <i className="fa fa-superpowers"></i>
                                     </span>
-                                    <span>Examples</span>
-                                </a>
+                                    <span>Keto</span>
+                                </NavLink>
                             </span>
                             <span className="navbar-item">
-                                <a className="button is-white is-outlined" href="#">
+                                <NavLink className="button is-white is-outlined" to="meat">
                                     <span className="icon">
                                         <i className="fa fa-book"></i>
                                     </span>
-                                    <span>Documentation</span>
-                                </a>
+                                    <span>Meat</span>
+                                </NavLink>
                             </span>
                             <span className="navbar-item">
-                                <a className="button is-white is-outlined" href="https://github.com/BulmaTemplates/bulma-templates/blob/master/templates/landing.html">
+                                <NavLink className="button is-white is-outlined" to="popular">
                                     <span className="icon">
                                         <i className="fa fa-github"></i>
                                     </span>
-                                    <span>View Source</span>
-                                </a>
+                                    <span>Popular</span>
+                                </NavLink>
                             </span>
                             <span className="navbar-item">
-                                <a className="button is-white is-outlined" href="#">
+                                <NavLink className="button is-white is-outlined" to="yumms">
                                     <span className="icon">
                                         <i className="fa fa-home"></i>
                                     </span>
-                                    <span>Home</span>
-                                </a>
+                                    <span>Yumms</span>
+                                </NavLink>
                             </span>
                         </div>
                     </div>
                 </div>
             </nav>
-            </div>
-
-    </section>
-    <script async type="text/javascript" src="../js/bulma.js"></script>
     </>
   )
 }
