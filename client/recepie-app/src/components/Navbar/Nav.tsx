@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from "react-router-dom";
 import Burger from "./SideBar";
 
-
+ 
 const Nav: React.FC<{}> = () => {
   return (
     <>
