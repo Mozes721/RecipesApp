@@ -12,13 +12,14 @@ const Nav: React.FC<{}> = () => {
     <>
             <nav className="navbar is-info hero-head">
                 <div className="container">
-                     <div className="navbar-brand">
+                    
+                     <div className="navbar-brand ">
                         <a
                             onClick={() => {
                             setisActive(!isActive);
                             }}
                             role="button"
-                            className={`navbar-burger burger ${isActive ? "is-active" : ""}`}
+                            className={`navbar-burger burger`}
                             aria-label="menu"
                             aria-expanded="false"
                             data-target="navbarMenu"
@@ -29,7 +30,8 @@ const Nav: React.FC<{}> = () => {
                         </a>
                         </div>
                         <Burger />
-                    <div id="navbarMenu" className={`navbar-menu ${isActive ? "is-active" : ""}`}>
+                        </div>
+                    <div id="navbarMenu" className="navbar-menu">
                         <div className="navbar-end">
                             <span className="navbar-item">
                                 <NavLink className="button is-white is-outlined" to="/">
@@ -74,11 +76,11 @@ const Nav: React.FC<{}> = () => {
                         </div>
                     </div>
 
-                </div>
+
                 
             </nav>
             
-            
+
     </>
   )
 }
