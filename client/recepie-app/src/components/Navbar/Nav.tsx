@@ -1,25 +1,35 @@
-import React from 'react'
+import React from "react";
 import { NavLink } from "react-router-dom";
 import Burger from "./SideBar";
 
- 
+
+
 const Nav: React.FC<{}> = () => {
+  const [isActive, setisActive] = React.useState<boolean>(false); 
+  
+
   return (
     <>
             <nav className="navbar is-info hero-head">
                 <div className="container">
-                    <div className="navbar-brand">
-                        <a className="navbar-item">
-                            
-                           <h1>Recepie App</h1> 
+                     <div className="navbar-brand">
+                        <a
+                            onClick={() => {
+                            setisActive(!isActive);
+                            }}
+                            role="button"
+                            className={`navbar-burger burger ${isActive ? "is-active" : ""}`}
+                            aria-label="menu"
+                            aria-expanded="false"
+                            data-target="navbarMenu"
+                        >
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
                         </a>
-                        <span className="navbar-burger burger" data-target="navbarMenu">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </span>
-                    </div>
-                    <div id="navbarMenu" className="navbar-menu">
+                        </div>
+                        <Burger />
+                    <div id="navbarMenu" className={`navbar-menu ${isActive ? "is-active" : ""}`}>
                         <div className="navbar-end">
                             <span className="navbar-item">
                                 <NavLink className="button is-white is-outlined" to="/">
@@ -63,8 +73,12 @@ const Nav: React.FC<{}> = () => {
                             </span>
                         </div>
                     </div>
+
                 </div>
+                
             </nav>
+            
+            
     </>
   )
 }
