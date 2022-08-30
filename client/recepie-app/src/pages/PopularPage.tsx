@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
-// const dotenv = require('dotenv');
+import React, { useEffect, useState } from "react";
+import {Splide, SplideSlide} from "@splidejs/react-splide";
+import "@splidejs/splide/dist/css/splide.min.css";
+
 
 export function Popular() {
   const [popular, setPopular] = useState([] as any[]);
@@ -9,12 +11,22 @@ export function Popular() {
   }, []);
 
 const getPopular = async () => {
+
+  const check = localStorage.getItem('popular');
+  
+  if(check) {
+    setPopular(JSON.parse(check));
+  } else {
   const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_URL}&number=10`)
   const data = await api.json();
+
   console.log(data.recipes)
-  
   setPopular(data.recipes);
+
+  localStorage.setItem('popular', JSON.stringify(data.recipes));
+  }
 };
+
   return (
     <div>
       <div className="box cta">
@@ -22,30 +34,40 @@ const getPopular = async () => {
         <span className="tag is-primary">TOP</span> 10 Popular
       </p>
     </div>
-    <section className="container">
-        <div className="columns features">
-          {popular.map((recepie, i) => {
+    <section className="container is-variable is-4">
+        
+          <Splide options={{
+            perPage:3,
+            arrows:false,
+          }}>
+          {popular.map((recepie) => {
             return(
-              <div className="column is-4">
-                <div className="card is-shady">
+              <SplideSlide>
+                
+                <div className="card is-shady column is-10">
                   <div className="card-image">
-                    <figure className="image is-4by3">
+                    <figure className="image is-3by2">
                       <img src={recepie.image} alt={recepie.title} className="modal-button" data-target="modal-image2" />
                     </figure>
                   </div>
-                <div className="card-content">
-                  <div className="content">
-                    <h4>{recepie.title}</h4>
-                    {/* <p>{recepie.summary}</p> */}
-                    <span className="button is-link modal-button" data-target="modal-image2">Image modal</span>
-                  </div>
+                    <div className="card-content ">
+                      <div className="content">
+                        <h5>{recepie.title}</h5>
+                        <div className="columns is-mobile  is-centered is-one-quarter">
+                        <a href={recepie.sourceUrl} target="_blank" rel="noreferrer">
+                          <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
+                        </a>
+                        <span className="button is-success column is-narrow" data-target="modal-image2">Add to Yumms</span>
+                        </div>
+                      </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-            )
-          }
-          )}
-        </div>
+              
+              </SplideSlide>
+            );
+          })}
+          </Splide>
+        
     </section>
     </div>
   )

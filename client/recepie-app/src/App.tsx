@@ -17,7 +17,6 @@ function App() {
     <Router>
         <Nav />
         <section className="hero is-fullheight">
-          <div>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="keto" element={<Keto />} />
@@ -25,7 +24,6 @@ function App() {
               <Route path="popular" element={<Popular />} />
               <Route path="yumms" element={<Yumms />} />
             </Routes>
-          </div>
         </section>
     </Router>
     <script async type="text/javascript" src="../js/bulma.js"></script>
