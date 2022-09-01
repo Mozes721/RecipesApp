@@ -3,27 +3,27 @@ import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
 
 
-export function Popular() {
-  const [popular, setPopular] = useState([] as any[]);
+const Keto: React.FC = () => {
+  const [keto, setKeto] = useState([] as any[]);
 
   useEffect(() => {
-    getPopular();
+    getKeto();
   }, []);
 
-const getPopular = async () => {
+const getKeto = async () => {
 
-  const check = localStorage.getItem('popular');
+  const check = localStorage.getItem('keto');
   
   if(check) {
-    setPopular(JSON.parse(check));
+    setKeto(JSON.parse(check));
   } else {
-  const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_URL}&number=10`)
+  const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_URL}&number=9&tags=ketogenic`)
   const data = await api.json();
 
   console.log(data.recipes)
-  setPopular(data.recipes);
+  setKeto(data.recipes);
 
-  localStorage.setItem('popular', JSON.stringify(data.recipes));
+  localStorage.setItem('keto', JSON.stringify(data.recipes));
   }
 };
 
@@ -31,16 +31,16 @@ const getPopular = async () => {
     <div>
       <div className="box cta">
       <p className="has-text-centered">
-        <span className="tag is-primary">TOP</span> 10 Popular
+        <span className="tag is-primary">Keto</span> Recepies
       </p>
     </div>
     <section className="container is-variable is-4">
-        
+        <h3>Popular Picks</h3>
           <Splide options={{
             perPage:3,
             arrows:false,
           }}>
-          {popular.map((recepie) => {
+          {keto.map((recepie) => {
             return(
               <SplideSlide>
                 
@@ -67,8 +67,8 @@ const getPopular = async () => {
             );
           })}
           </Splide>
-        
     </section>
     </div>
   )
 }
+export default Keto;

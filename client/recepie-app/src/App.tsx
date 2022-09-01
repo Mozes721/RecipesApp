@@ -2,24 +2,23 @@ import React from 'react';
 import  Nav  from "./components/Navbar/Nav";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Home } from './pages/HomePage';
-import { Keto } from './pages/KetoPage';
+import  KetoPaeloPage  from './pages/KetoPaleoPage';
 import { Meat } from './pages/MeatPage';
-import { Popular } from './pages/PopularPage';
+import  Popular  from './pages/PopularPage';
 import { Yumms } from './pages/YummsPage';
 
 
 
  
-function App() {
+const App: React.FC = () => {
   return (
     <>
-
     <Router>
         <Nav />
         <section className="hero is-fullheight">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="keto" element={<Keto />} />
+              <Route path="ketoPaelo" element={<KetoPaeloPage />} />
               <Route path="meat" element={<Meat />} />
               <Route path="popular" element={<Popular />} />
               <Route path="yumms" element={<Yumms />} />
