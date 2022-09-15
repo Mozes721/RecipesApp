@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	firebase "firebase.google.com/go"
@@ -9,21 +10,41 @@ import (
 	"google.golang.org/api/option"
 )
 
-func firebaseDB() *firebase.App {
+func FirebaseDB() *firebase.App {
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("./serviceAccountKey.json")
-	app, err := firebase.NewApp(ctx, nil, sa)
-	if err != nil {
-		log.Fatalf("error initializing app: %v\n", err)
-	}
-	client, err := app.Firestore(ctx)
+	opt := option.WithCredentialsFile("/home/mozes/serviceAccountKey.json")
+	config := &firebase.Config{ProjectID: "Recepies"}
+
+	app, err := firebase.NewApp(ctx, config, opt)
+
+	// client, err := app.Firestore(ctx)
 
 	if err != nil {
 		log.Fatalln(err)
 	}
-	defer client.Close()
+	// defer client.Close()
 
 	return app
+}
+
+func ReadData() *firebase.App {
+	ctx := context.Background()
+	app := FirebaseDB()
+	client, err := app.Firestore(ctx)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	iter := client.Collection("users").Documents(ctx)
+	for {
+		doc, _ := iter.Next()
+		if err != nil {
+			log.Fatalf("Failed to iterate: %v", err)
+		}
+		fmt.Println(doc.Data())
+	}
+	// return (*firebase.App)(iter)
+	// defer client.Close()
 }
 
 func Test(message string) string {
