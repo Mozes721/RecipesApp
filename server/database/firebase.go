@@ -47,7 +47,3 @@ func ReadData() *firebase.App {
 	// defer client.Close()
 }
 
-func Test(message string) string {
-	msg := "Hello to you " + message
-	return msg
-}
