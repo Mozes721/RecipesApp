@@ -1,41 +1,25 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"log"
-
-	// "github.com/gin-gonic/gin"
-
-	"github.com/RecepieApp/server/database"
+	"github.com/RecepieApp/server/db"
 )
 
-// func connect(app) {
-// 	client, err := app.Firestore(ctx)
-
-// 	if err != nil {
-// 		log.Fatalln(err)
-// 	}
-// }
+//func server(ctx context) {
+//	server := gin.Default()
+//
+//	server.GET("/test", func(ctx *gin.Context) {
+//		ctx.JSON(200, gin.H{
+//			"Message": "OK!",
+//		})
+//	})
+//}
+type Map map[string]interface{}
 
 func main() {
-	ctx := context.Background()
-	// server := gin.Default()
+	fmt.Println(db.ReadCollection())
+	recepie := Map{"Made": true, "Raiting": 7, "Title": "Hinkali"}
 
-	// server.GET("/test", func(ctx *gin.Context) {
-	// 	ctx.JSON(200, gin.H{
-	// 		"Message": "OK!",
-	// 	})
-	// })
-	db := database.FirebaseDB()
-	// readDb := database.ReadData()
-
-	client, err := db.Firestore(ctx)
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-	// fmt.Println(readDb)
-	fmt.Println(client)
-
+	db.AddCollectiosRecepie(recepie)
+	fmt.Println(db.ReadCollection())
 }
