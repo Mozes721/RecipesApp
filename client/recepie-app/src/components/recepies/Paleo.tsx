@@ -31,7 +31,7 @@ const getPaleo = async () => {
     <div>
       <div className="box cta">
       <p className="has-text-centered">
-        <span className="tag is-primary">Paleo</span> Recepies
+        <span className="tag is-primary">Paleo Recipes</span>
       </p>
     </div>
     <section className="container is-variable is-4">

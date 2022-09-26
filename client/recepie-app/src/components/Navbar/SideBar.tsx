@@ -58,7 +58,6 @@ const StyledBurgerMenu = styled(Menu)`
   }
 `;
 
-
 const Burger: React.FC<{}> = () => {
   return (
     <StyledBurgerMenu>
@@ -66,17 +65,18 @@ const Burger: React.FC<{}> = () => {
         Home
       </NavLink>
 
-      <NavLink className="subtitle is-6 has-text-white" to="keto">
-        Keto
+      <NavLink className="subtitle is-6 has-text-white" to="keto-paelo">
+        Keto&Paelo
       </NavLink>
 
-      <NavLink className="subtitle is-6 has-text-white" to="meat">
-        Meat
+      <NavLink className="subtitle is-6 has-text-white" to="whole-popular">
+        Whole&Popular
       </NavLink>
 
-      <NavLink className="subtitle is-6 has-text-white" to="popular">
-        Popular
+      <NavLink className="subtitle is-6 has-text-white" to="veg">
+        Vegan&Vegetarian
       </NavLink>
+
       <NavLink className="subtitle is-6 has-text-white" to="yumms">
         Yumms
       </NavLink>

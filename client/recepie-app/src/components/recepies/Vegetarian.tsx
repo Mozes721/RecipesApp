@@ -2,25 +2,25 @@ import React, { useEffect, useState } from "react";
 import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
 
-const Whole: React.FC = () => {
-    const [whole, setWhole] = useState([] as any[]);
+const Vegetarian: React.FC = () => {
+    const [vegetarian, setVegetarian] = useState([] as any[]);
 
     useEffect(() => {
-        getWhole();
+        getVegeterian();
     }, []);
 
-    const getWhole = async () => {
+    const getVegeterian = async () => {
 
-        const check = localStorage.getItem('whole');
+        const check = localStorage.getItem('vegetarian');
 
         if(check) {
-            setWhole(JSON.parse(check));
+            setVegetarian(JSON.parse(check));
         } else {
-            const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_URL}&number=9&tags=whole30`)
+            const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_URL}&number=9&tags=vegetarian`)
             const data = await api.json();
             console.log(data.recipes)
-            setWhole(data.recipes);
-            localStorage.setItem('whole', JSON.stringify(data.recipes));
+            setVegetarian(data.recipes);
+            localStorage.setItem('vegan', JSON.stringify(data.recipes));
         }
     };
 
@@ -28,16 +28,16 @@ const Whole: React.FC = () => {
         <div>
             <div className="box cta">
                 <p className="has-text-centered">
-                    <span className="tag is-primary">Whole30 Recepies</span>
+                    <span className="tag is-primary">Vegetarian Recipes</span>
                 </p>
             </div>
             <section className="container is-variable is-4">
-                <h3>Whole Picks</h3>
+                <h3>Vegetarian Picks</h3>
                 <Splide options={{
                     perPage:3,
                     arrows:false,
                 }}>
-                    {whole.map((recipe) => {
+                    {vegetarian.map((recipe) => {
                         return(
                             <SplideSlide>
                                 <div className="card is-shady column is-10">
@@ -67,4 +67,4 @@ const Whole: React.FC = () => {
         </div>
     )
 }
-export default Whole;
+export default Vegetarian;

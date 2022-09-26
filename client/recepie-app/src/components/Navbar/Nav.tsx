@@ -42,27 +42,27 @@ const Nav: React.FC<{}> = () => {
                                 </NavLink>
                             </span>
                             <span className="navbar-item">
-                                <NavLink className="button is-white is-outlined" to="keto">
+                                <NavLink className="button is-white is-outlined" to="keto-paelo">
                                     <span className="icon">
                                         <i className="fa fa-superpowers"></i>
                                     </span>
-                                    <span>Keto</span>
+                                    <span>Keto&Paelo</span>
                                 </NavLink>
                             </span>
                             <span className="navbar-item">
-                                <NavLink className="button is-white is-outlined" to="meat">
+                                <NavLink className="button is-white is-outlined" to="whole-popular">
                                     <span className="icon">
                                         <i className="fa fa-book"></i>
                                     </span>
-                                    <span>Meat</span>
+                                    <span>Whole&Popular</span>
                                 </NavLink>
                             </span>
                             <span className="navbar-item">
-                                <NavLink className="button is-white is-outlined" to="popular">
+                                <NavLink className="button is-white is-outlined" to="vegan-vegetarian">
                                     <span className="icon">
                                         <i className="fa fa-github"></i>
                                     </span>
-                                    <span>Popular</span>
+                                    <span>Vegan&Vegetarian</span>
                                 </NavLink>
                             </span>
                             <span className="navbar-item">
@@ -75,14 +75,8 @@ const Nav: React.FC<{}> = () => {
                             </span>
                         </div>
                     </div>
-
-
-                
             </nav>
-            
-
     </>
   )
 }
-
 export default Nav

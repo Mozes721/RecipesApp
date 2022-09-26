@@ -1,7 +1,9 @@
 import React from 'react';
-
+import Searched from '../components/Searched'
 
 const HomePage: React.FC = () => {
-  return <h1>Home Page</h1>
+  return (
+      <Searched />
+  )
 }
 export default HomePage;

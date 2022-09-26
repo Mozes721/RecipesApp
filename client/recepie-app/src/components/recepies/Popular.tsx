@@ -31,7 +31,7 @@ const getPopular = async () => {
     <div>
       <div className="box cta">
       <p className="has-text-centered">
-        <span className="tag is-primary">TOP</span> 10 Popular
+        <span className="tag is-primary">Popular Recipes</span>
       </p>
     </div>
     <section className="container is-variable is-4">
