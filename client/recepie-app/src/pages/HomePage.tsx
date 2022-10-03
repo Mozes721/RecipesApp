@@ -3,9 +3,10 @@ import Searched from '../components/Searched'
 
 const HomePage: React.FC = () => {
     const [text, setText] = useState("");
-    const changeState = () => {
+    const callBack = (val: string | number) => {
         console.log("FROM PARENT")
-        console.log(text);
+        console.log(val);
+        alert(val);
     }
   return (
       <section className="section py-4">
@@ -15,7 +16,7 @@ const HomePage: React.FC = () => {
               <span className="has-text-gray-dark">Welcome to My Recepie's</span>
               <h2 className="mt-2 mb-4 is-size-1 is-size-3-mobile has-text-weight-bold">Find recepies of your liking in outer pages and add them to your cooking wish list.</h2>
               <p className="subtitle has-text-gray mb-5">Otherwise search for anything particular you would like to cook bellow!</p>
-              <Searched text={changeState} />
+              <Searched text={callBack} />
             </div>
           </div>
             <h1>{text}</h1>

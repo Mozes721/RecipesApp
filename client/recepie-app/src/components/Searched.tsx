@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
 
-interface InputValue {
+interface Props {
     text: any;
 }
 
-const Searched: React.FC<InputValue> = (props) => {
+const Searched: React.FC<Props> = (props) => {
     const [input, setInput] = useState<string | number>('');
     const getInputValue = () => {
-        props.text.value = input;
-        console.log(props.text.value);
+        props.text(input);
+        console.log(props.text);
 
     }
     return (
