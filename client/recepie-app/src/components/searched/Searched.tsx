@@ -8,22 +8,24 @@ interface Props {
 
 const Searched: React.FC<Props> = (props) => {
     const [input, setInput] = useState<string | number>('');
-    const getInputValue = () => {
+    const handleSubmit = (event: any) => {
         props.text(input);
-        console.log(props.text);
-
-    }
+        event.preventDefault();
+        event.target.reset();
+}
     return (
-        <div className="has-addons-fullwidth">
-            <div className="control">
-                <input className="input" type="text" placeholder="Find a recipe" onChange={e => setInput(e.target.value)}/>
+        <form onSubmit={handleSubmit} >
+            <div className="has-addons-fullwidth">
+                <div className="control">
+                    <input className="input" type="text" placeholder="Input calories like 2000 or recipes type from table" onChange={e => setInput(e.target.value)} required/>
+                </div>
+                    <div className="control 0.75rem">
+                    <button className="button is-info">
+                        Search
+                    </button>
+                </div>
             </div>
-            <div className="control">
-                <button className="button is-info" onClick={getInputValue}>
-                    Search
-                </button>
-            </div>
-        </div>
+        </form>
     )
 }
 export default Searched;
