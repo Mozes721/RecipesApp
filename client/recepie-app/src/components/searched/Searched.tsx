@@ -12,14 +12,14 @@ const Searched: React.FC<Props> = (props) => {
         props.text(input);
         event.preventDefault();
         event.target.reset();
-}
+    }
     return (
         <form onSubmit={handleSubmit} >
             <div className="has-addons-fullwidth">
                 <div className="control">
-                    <input className="input" type="text" placeholder="Input calories like 2000 or recipes type from table" onChange={e => setInput(e.target.value)} required/>
+                    <input className="input" type="text" placeholder="Input calories like 2000 or recipes type from table" onChange={e => setInput(e.target.value.replace(" ", "-"))} required/>
                 </div>
-                    <div className="control 0.75rem">
+                <div className="control 0.75rem">
                     <button className="button is-info">
                         Search
                     </button>
