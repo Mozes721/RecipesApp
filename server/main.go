@@ -18,7 +18,7 @@ type Map map[string]interface{}
 
 func main() {
 	fmt.Println(db.ReadCollection())
-	recepie := Map{"Made": true, "Raiting": 7, "Title": "Hinkali"}
+	recepie := Map{"Made": true, "Raiting": 7, "Title": "Hinkali", "Url": "https://hinkali.com"}
 
 	db.AddCollectiosRecepie(recepie)
 	fmt.Println(db.ReadCollection())
