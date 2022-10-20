@@ -8,9 +8,8 @@ interface Props {
 }
 
 const SearchedReturn: React.FC<Props> = (props)=> {
-    const [searched, setSearched] = useState("");
-
-    console.log(searched);
+    const [meals, setMeals] = useState([] as any[]);
+    const [nutrients, setNutrients] = useState([] as any[])
 
     useEffect(() => {
 
@@ -23,61 +22,68 @@ const SearchedReturn: React.FC<Props> = (props)=> {
     }, [props.text]);
 
     const getMealAsType = async () => {
-        console.log(props.text);
         const api = await fetch(`https://api.spoonacular.com/mealplanner/generate?apiKey=${process.env.REACT_APP_API_URL}&timeFrame=day&type=${props.text}&number=1`)
-        console.log(api)
         const data = await api.json();
-        setSearched(data);
+        console.log(data.meals);
+        setMeals(data.meals);
+        setNutrients(data.nutrients);
+        console.log(data.nutrients);
     }
     const getMealAsCaloire = async () => {
         const api = await fetch(`https://api.spoonacular.com/mealplanner/generate?apiKey=${process.env.REACT_APP_API_URL}&timeFrame=day&targetCalories=${props.text}&number=1`)
-        console.log(api)
         const data = await api.json();
-        setSearched(data);
-
+        console.log(data.meals);
+        setMeals(data.meals);
+        setNutrients(data.nutrients);
+        console.log(data.nutrients);
     }
-        if(searched !== "") {
+        if(meals !== []) {
             return (
                 <main>
-                <section className="nutritions">
+                <section>
                     <nav className="level">
+                    { Object.entries(nutrients).map((nutrient,amount) =>
                         <div className="level-item has-text-centered">
                             <div>
-                                <p className="heading">Calories</p>
-                                <p className="title"></p>
+                                <p className="heading">{nutrient[0]}</p>
+                                <p className="title">{nutrient[1]}</p>
                             </div>
-                        </div>
-                        <div className="level-item has-text-centered">
-                            <div>
-                                <p className="heading">Protein</p>
-                                <p className="title">123</p>
-                            </div>
-                        </div>
-                        <div className="level-item has-text-centered">
-                            <div>
-                                <p className="heading">Fat</p>
-                                <p className="title">456K</p>
-                            </div>
-                        </div>
-                        <div className="level-item has-text-centered">
-                            <div>
-                                <p className="heading">Carbohydrates</p>
-                                <p className="title">789</p>
-                            </div>
-                        </div>
+                        </div>)
+                    }
                     </nav>
                 </section>
-                {/*<section className="recepie">*/}
-                {/*    /!*{searched.map((recepie) => {*!/*/}
-                {/*    /!*    return (*!/*/}
-                {/*    /!*        <p>recepie</p>*!/*/}
-                {/*    /!*    )*!/*/}
-                {/*    /!*})}*!/*/}
-                {/*</section>*/}
+                        <section className="container is-variable is-4">
+                            <Splide options={{
+                                perPage:3,
+                                arrows:false,
+                            }}>
+                                {meals.map((meal)=> {
+                                    return(
+                                        <SplideSlide>
+                                            <div className="card is-shady column is-10">
+                                                <div className="card-content ">
+                                                    <div className="content">
+                                                        <h5>{meal.title}</h5>
+                                                        <p className="mt-2 text-gray-800 text-sm">Ready in {meal.readyInMinutes}</p>
+                                                        <p className="mt-2 text-gray-800 text-sm">Amount of servings {meal.servings}</p>
+                                                        <a href={meal.sourceUrl} target="_blank" rel="noreferrer">
+                                                            <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
+                                                        </a>
+
+                                                            <span className="button is-success column is-narrow" data-target="modal-image2">Add to Yumms</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </SplideSlide>
+                                    );
+                                })}
+                            </Splide>
+                        </section>
                 </main>
             )
         }
-        return null;
+    return null;
 }
 
 
