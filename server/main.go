@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/RecepieApp/server/db"
 )
 
@@ -17,9 +16,9 @@ import (
 type Map map[string]interface{}
 
 func main() {
-	fmt.Println(db.ReadCollection())
-	recepie := Map{"Made": true, "Raiting": 7, "Title": "Hinkali", "Url": "https://hinkali.com"}
-
-	db.AddCollectiosRecepie(recepie)
-	fmt.Println(db.ReadCollection())
+	//recepie := Map{"Made": false, "Raiting": 4, "Title": "Spagetti", "Url": "https://spagetti.com"}
+	//db.AddCollectiosRecepie(recepie)
+	test := "Spagetti"
+	db.CheckCollection(test)
+	//fmt.Println(db.CheckCollection(recepie))
 }

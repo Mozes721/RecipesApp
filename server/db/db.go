@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"context"
 	firebase "firebase.google.com/go"
+	"fmt"
 	"google.golang.org/api/iterator"
 	"log"
 
@@ -40,6 +41,23 @@ func ReadCollection() (readCollection map[string]interface{}) {
 		readCollection = doc.Data()
 	}
 	return readCollection
+}
+
+func CheckCollection(recepie, collection map[string]string) {
+	if checkForValue(recepie, ReadCollection()) {
+		fmt.Println("Found")
+	} else {
+		fmt.Println("Not found")
+	}
+}
+
+func checkForValue(recepie string, collection map[string]interface{}) bool {
+	_, ok := collection["Title"][recepie]
+	if ok {
+		return true
+	} else {
+		return false
+	}
 }
 
 func AddCollectiosRecepie(recepie map[string]interface{}) {
