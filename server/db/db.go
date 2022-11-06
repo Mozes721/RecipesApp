@@ -79,6 +79,7 @@ func AddCollectiosRecepie(recepie map[string]interface{}) {
 		"Made":   recepie["Made"],
 		"Rating": recepie["Raiting"],
 		"Title":  recepie["Title"],
+		"Url":    recepie["Url"],
 	})
 	if err != nil {
 		log.Fatalf("Failed adding alovelace: %v", err)

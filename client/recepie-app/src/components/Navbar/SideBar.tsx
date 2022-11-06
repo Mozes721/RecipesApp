@@ -73,7 +73,7 @@ const Burger: React.FC<{}> = () => {
         Whole&Popular
       </NavLink>
 
-      <NavLink className="subtitle is-6 has-text-white" to="veg">
+      <NavLink className="subtitle is-6 has-text-white" to="vegan-vegetarian">
         Vegan&Vegetarian
       </NavLink>
 

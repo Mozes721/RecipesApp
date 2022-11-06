@@ -8,81 +8,82 @@ interface Props {
 }
 
 const SearchedReturn: React.FC<Props> = (props)=> {
-    const [searched, setSearched] = useState([] as any[]);
-    useEffect(() => {
-        getMeal();
-    },[]);
+    const [meals, setMeals] = useState([] as any[]);
+    const [nutrients, setNutrients] = useState([] as any[])
 
-    const getMeal = async () => {
-        if (typeof props.text == "string") {
-            const api = await fetch(`https://api.spoonacular.com/mealplanner/generate?apiKey=${process.env.REACT_APP_API_URL}&timeFrame=day&type=${props.text}&number=1`)
-            const data = await api.json();
-            setSearched(data.recepies);
+    useEffect(() => {
+
+        if (isNaN(props.text as number)) {
+            getMealAsType();
         } else {
-            const api = await fetch(`https://api.spoonacular.com/mealplanner/generate?apiKey=${process.env.REACT_APP_API_URL}&timeFrame=day&targetCalories=${props.text}&number=1`)
-            const data = await api.json();
-            setSearched(data.recepies);
+            getMealAsCaloire();
         }
 
+    }, [props.text]);
+
+    const getMealAsType = async () => {
+        const api = await fetch(`https://api.spoonacular.com/mealplanner/generate?apiKey=${process.env.REACT_APP_API_URL}&timeFrame=day&type=${props.text}&number=1`)
+        const data = await api.json();
+        console.log(data.meals);
+        setMeals(data.meals);
+        setNutrients(data.nutrients);
+        console.log(data.nutrients);
     }
+    const getMealAsCaloire = async () => {
+        const api = await fetch(`https://api.spoonacular.com/mealplanner/generate?apiKey=${process.env.REACT_APP_API_URL}&timeFrame=day&targetCalories=${props.text}&number=1`)
+        const data = await api.json();
+        console.log(data.meals);
+        setMeals(data.meals);
+        setNutrients(data.nutrients);
+        console.log(data.nutrients);
+    }
+        if(meals !== []) {
+            return (
+                <main>
+                <section>
+                    <nav className="level">
+                    { Object.entries(nutrients).map((nutrient,amount) =>
+                        <div className="level-item has-text-centered">
+                            <div>
+                                <p className="heading">{nutrient[0]}</p>
+                                <p className="title">{nutrient[1]}</p>
+                            </div>
+                        </div>)
+                    }
+                    </nav>
+                </section>
+                        <section className="container is-variable is-4">
+                            <Splide options={{
+                                perPage:3,
+                                arrows:false,
+                            }}>
+                                {meals.map((meal)=> {
+                                    return(
+                                        <SplideSlide>
+                                            <div className="card is-shady column is-10">
+                                                <div className="card-content ">
+                                                    <div className="content">
+                                                        <h5>{meal.title}</h5>
+                                                        <p className="mt-2 text-gray-800 text-sm">Ready in {meal.readyInMinutes}</p>
+                                                        <p className="mt-2 text-gray-800 text-sm">Amount of servings {meal.servings}</p>
+                                                        <a href={meal.sourceUrl} target="_blank" rel="noreferrer">
+                                                            <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
+                                                        </a>
 
-    return (
-        <div className="container">
-            {searched.map(recepie) => {
-                return (
-                    <div>
-            <section className="nutrients">
-                <div className="level-item has-text-centered">
-                    <div>
-                        <p className="heading">Calories</p>
-                        <p className="title">{searched.nutrients.calories.toFixed(0)}</p>
-                    </div>
-                </div>
-                <div className="level-item has-text-centered">
-                    <div>
-                        <p className="heading">Following</p>
-                        <p className="title">123</p>
-                    </div>
-                </div>
-                <div className="level-item has-text-centered">
-                    <div>
-                        <p className="heading">Followers</p>
-                        <p className="title">456K</p>
-                    </div>
-                </div>
-                <div className="level-item has-text-centered">
-                    <div>
-                        <p className="heading">Likes</p>
-                        <p className="title">789</p>
-                    </div>
-                </div>
-            </section>
+                                                            <span className="button is-success column is-narrow" data-target="modal-image2">Add to Yumms</span>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-            <section>
-            <div className="card is-shady column is-10">
-                <div className="card-image">
-                    <figure className="image is-3by2">
-                        <img src={recepie.image} alt={recepie.title} className="modal-button" data-target="modal-image2" />
-                    </figure>
-                </div>
-                <div className="card-content ">
-                    <div className="content">
-                        <h5>{recepie.title}</h5>
-                        <div className="columns is-mobile  is-centered is-one-quarter">
-                            <a href={recepie.sourceUrl} target="_blank" rel="noreferrer">
-                                <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
-                            </a>
-                            <span className="button is-success column is-narrow" data-target="modal-image2">Add to Yumms</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-                </div>
-            })}
-        </div>
-
-    )
+                                        </SplideSlide>
+                                    );
+                                })}
+                            </Splide>
+                        </section>
+                </main>
+            )
+        }
+    return null;
 }
 
 
