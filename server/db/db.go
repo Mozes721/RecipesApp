@@ -1,18 +1,24 @@
 package db
 
 import (
-	"cloud.google.com/go/firestore"
 	"context"
-	firebase "firebase.google.com/go"
-	"google.golang.org/api/iterator"
+	"io/ioutil"
 	"log"
 
+	"cloud.google.com/go/firestore"
+	firebase "firebase.google.com/go"
+
+	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
 
 func FirebaseDB() *firestore.Client {
 	ctx := context.Background()
-	opt := option.WithCredentialsFile("/home/mozes/serviceAccountKey.json")
+	data, err := ioutil.ReadFile("C:\\Users\\RichardTaujenis\\Desktop\\RecipesApp\\server\\db\\serviceAccountKey.json")
+	if err != nil {
+		panic(err)
+	}
+	opt := option.WithCredentialsJSON(data)
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		panic(err)
@@ -24,9 +30,14 @@ func FirebaseDB() *firestore.Client {
 	return client
 }
 
-func ReadCollection() (readCollection map[string]interface{}) {
+type Recepie struct {
+	recepies map[string]interface{}
+}
+
+func ReadCollection() (readCollection []map[string]interface{}) {
 	ctx := context.Background()
 	client := FirebaseDB()
+	Recepies := []*Recepie{}
 	defer client.Close()
 	iter := client.Collection("my-recepies").Documents(ctx)
 	for {
@@ -37,10 +48,28 @@ func ReadCollection() (readCollection map[string]interface{}) {
 		if err != nil {
 			panic(err)
 		}
-		readCollection = doc.Data()
+		readCollection := doc.Data()
+		Recepies = append(Recepies, readCollection)
 	}
-	return readCollection
+	return Recepies
 }
+
+// func CheckIfTitleExists(ctx context.Context, title interface{}) bool {
+// 	// [START get_user_by_email]
+// 	collection := ReadCollection()
+// 	u, err := CheckIfTitleExists(ctx, email)
+// 	if err != nil {
+// 		log.Fatalf("error getting user by email %s: %v\n", email, err)
+// 	}
+// 	log.Printf("Successfully fetched user data: %v\n", u)
+// 	// [END get_user_by_email]
+// 	return u
+// }
+// func CheckIfTitleExists(title interface{}) {
+// 	data := ReadCollection()
+// 	fmt.Println(data)
+
+// }
 
 func AddCollectiosRecepie(recepie map[string]interface{}) {
 	ctx := context.Background()
