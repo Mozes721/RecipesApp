@@ -2,12 +2,12 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"log"
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
-
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
@@ -30,28 +30,28 @@ func FirebaseDB() *firestore.Client {
 	return client
 }
 
-type Recepie struct {
-	recepies map[string]interface{}
-}
-
-func ReadCollection() (readCollection []map[string]interface{}) {
-	ctx := context.Background()
-	client := FirebaseDB()
-	Recepies := []*Recepie{}
+func ReadCollection(ctx context.Context, client *firestore.Client) interface{} {
 	defer client.Close()
 	iter := client.Collection("my-recepies").Documents(ctx)
+	defer iter.Stop()
+	var data []Recepie
+	var recepie Recepie
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
 			break
 		}
-		if err != nil {
-			panic(err)
+		if err := doc.DataTo(&recepie); err != nil {
+			log.Fatalf("Failed to iterate: %v", err)
 		}
-		readCollection := doc.Data()
-		Recepies = append(Recepies, readCollection)
+		data = append(data, recepie)
 	}
-	return Recepies
+	return data
+}
+func CheckIfRecepieExists(recepie string, recepies interface{}) bool {
+
+	fmt.Println(recepie)
+	return true
 }
 
 // func CheckIfTitleExists(ctx context.Context, title interface{}) bool {
