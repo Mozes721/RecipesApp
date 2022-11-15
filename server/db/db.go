@@ -3,22 +3,17 @@ package db
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"log"
 
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
+
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
 
-func FirebaseDB() *firestore.Client {
-	ctx := context.Background()
-	data, err := ioutil.ReadFile("C:\\Users\\RichardTaujenis\\Desktop\\RecipesApp\\server\\db\\serviceAccountKey.json")
-	if err != nil {
-		panic(err)
-	}
-	opt := option.WithCredentialsJSON(data)
+func FirebaseDB(ctx context.Context) *firestore.Client {
+	opt := option.WithCredentialsFile("/home/mozes/serviceAccountKey.json")
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		panic(err)
@@ -30,50 +25,65 @@ func FirebaseDB() *firestore.Client {
 	return client
 }
 
-func ReadCollection(ctx context.Context, client *firestore.Client) interface{} {
-	defer client.Close()
-	iter := client.Collection("my-recepies").Documents(ctx)
-	defer iter.Stop()
-	var data []Recepie
-	var recepie Recepie
+func ReadCollection(ctx context.Context) {
+	ct := context.Background()
+	projectID := "my-recepies"
+	client := FirebaseDB(ct)
+	iter := client.Collection(projectID).Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
 			break
 		}
-		if err := doc.DataTo(&recepie); err != nil {
+		if err != nil {
 			log.Fatalf("Failed to iterate: %v", err)
 		}
-		data = append(data, recepie)
+		fmt.Println(doc.Data())
 	}
-	return data
 }
-func CheckIfRecepieExists(recepie string, recepies interface{}) bool {
-
-	fmt.Println(recepie)
-	return true
+func AddRecepie(ctx context.Context, client *firestore.Client, r map[string]interface{}, title string) {
+	ok := checkCollection(client, title)
+	if ok {
+		fmt.Println("Title exits")
+	} else {
+		fmt.Println("Can add new recepie")
+	}
 }
 
-// func CheckIfTitleExists(ctx context.Context, title interface{}) bool {
-// 	// [START get_user_by_email]
-// 	collection := ReadCollection()
-// 	u, err := CheckIfTitleExists(ctx, email)
-// 	if err != nil {
-// 		log.Fatalf("error getting user by email %s: %v\n", email, err)
+func checkCollection(client *firestore.Client, title string) bool {
+	ctx := context.Background()
+	var exists bool
+	iter := client.Collection("my-recepies").Where("Title", "==", title).Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Fatalf("Failed to iterate: %v", err)
+		}
+		if doc.Data() != nil {
+			exists = true
+		} else {
+			exists = false
+		}
+	}
+	return exists
+
+}
+
+// func checkForValue(recepie string, collection map[string]interface{}) bool {
+// 	_, ok := collection["Title"][recepie]
+// 	if ok {
+// 		return true
+// 	} else {
+// 		return false
 // 	}
-// 	log.Printf("Successfully fetched user data: %v\n", u)
-// 	// [END get_user_by_email]
-// 	return u
-// }
-// func CheckIfTitleExists(title interface{}) {
-// 	data := ReadCollection()
-// 	fmt.Println(data)
-
 // }
 
 func AddCollectiosRecepie(recepie map[string]interface{}) {
 	ctx := context.Background()
-	client := FirebaseDB()
+	client := FirebaseDB(ctx)
 	defer client.Close()
 	_, _, err := client.Collection("my-recepies").Add(ctx, map[string]interface{}{
 		"Made":   recepie["Made"],

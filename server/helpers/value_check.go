@@ -1,7 +1,7 @@
 package helpers
 
 import (
-	"fmt"
+	"encoding/json"
 	"reflect"
 
 	"github.com/RecepieApp/server/db"
@@ -12,13 +12,11 @@ func GetFieldTitle(e *db.Recepie, field string) string {
 	f := reflect.Indirect(r).FieldByName(field)
 	return f.String()
 }
-func GetFieldDBTitles(recepie []interface{}, field string) string {
+func SetToMap(e *db.Recepie) map[string]interface{} {
+	var inInterface map[string]interface{}
+	inrec, _ := json.Marshal(e)
+	json.Unmarshal(inrec, &inInterface)
 
-	for k, v := range recepie {
-		fmt.Println(k, v)
-	}
-	// r := reflect.ValueOf(recepie)
-	// f := reflect.Indirect(r).FieldByName(field)
-	return "asds"
+	return inInterface
 
 }

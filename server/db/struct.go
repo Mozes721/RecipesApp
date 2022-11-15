@@ -2,7 +2,7 @@ package db
 
 // type Recepie map[string]interface{}
 type Data struct {
-	Recepies *Recepie
+	Recepies []Recepie
 }
 
 type Recepie struct {

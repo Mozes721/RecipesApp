@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/RecepieApp/server/db"
 	"github.com/RecepieApp/server/helpers"
@@ -20,19 +19,17 @@ import (
 //}
 
 func main() {
-	r := db.Recepie{Made: true, Rating: 7, Title: "Hinkali", Url: "https://hinkali.com"}
+	r := db.Recepie{Made: true, Rating: 7, Title: "Spagetti", Url: "https://hinkali.com"}
+
 	// recepie := Map{"Made": true, "Raiting": 7, "Title": "Hinkali", "Url": "https://hinkali.com"}
 	// CheckIfTitleExists(recepie["Title"])
-	title := helpers.GetFieldTitle(&r, "Title")
 	ctx := context.Background()
-	client := db.FirebaseDB()
-	recepies := db.ReadCollection(ctx, client)
-	json_recepies, err := helpers.ToJson(recepies)
-	if err != nil {
-		log.Fatalf("Failed to convert to JSON: %v", err)
-	}
-	titles := helpers.GetFieldDBTitles(json_recepies, "Title")
-	fmt.Println(db.CheckIfRecepieExists(title, json_recepies))
+	client := db.FirebaseDB(ctx)
+	title := helpers.GetFieldTitle(&r, "Title")
+	setToMap := helpers.SetToMap(&r)
+	db.AddRecepie(ctx, client, setToMap, title)
+
+	fmt.Println(title)
 	// AddCollectiosRecepie(recepie)
-	// fmt.Println(ReadCollection(r))
+	db.ReadCollection(ctx)
 }
