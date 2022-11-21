@@ -41,12 +41,15 @@ func ReadCollection(ctx context.Context) {
 		fmt.Println(doc.Data())
 	}
 }
-func AddRecepie(ctx context.Context, client *firestore.Client, r map[string]interface{}, title string) {
+func AddRecepie(client *firestore.Client, r *Recepie, title string) HTTPError {
 	ok := checkCollection(client, title)
 	if ok {
-		fmt.Println("Title exits")
+		fmt.Println("Apready exists")
+		return HTTPError{FlashMsg: "Title already exists"}
 	} else {
 		fmt.Println("Can add new recepie")
+		addCollectiosRecepie(r)
+		return HTTPError{FlashMsg: ""}
 	}
 }
 
@@ -72,27 +75,17 @@ func checkCollection(client *firestore.Client, title string) bool {
 
 }
 
-// func checkForValue(recepie string, collection map[string]interface{}) bool {
-// 	_, ok := collection["Title"][recepie]
-// 	if ok {
-// 		return true
-// 	} else {
-// 		return false
-// 	}
-// }
-
-func AddCollectiosRecepie(recepie map[string]interface{}) {
+func addCollectiosRecepie(recepie *Recepie) {
 	ctx := context.Background()
 	client := FirebaseDB(ctx)
 	defer client.Close()
 	_, _, err := client.Collection("my-recepies").Add(ctx, map[string]interface{}{
-		"Made":   recepie["Made"],
-		"Rating": recepie["Raiting"],
-		"Title":  recepie["Title"],
-		"Url":    recepie["Url"],
+		"Made":   recepie.Made,
+		"Rating": recepie.Rating,
+		"Title":  recepie.Title,
+		"Url":    recepie.Url,
 	})
 	if err != nil {
 		log.Fatalf("Failed adding alovelace: %v", err)
 	}
-	return
 }
