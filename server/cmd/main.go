@@ -1,11 +1,13 @@
 package main
 
 import (
-	"context"
+	"flag"
 	"fmt"
-
-	"github.com/RecepieApp/server/db"
-	"github.com/RecepieApp/server/helpers"
+	"github.com/RecepieApp/server/app"
+	. "github.com/RecepieApp/server/runtime"
+	//
+	//"github.com/RecepieApp/server/db"
+	//"github.com/RecepieApp/server/helpers"
 )
 
 //
@@ -19,18 +21,20 @@ import (
 //	})
 //}
 
+var _ = flag.Bool("debug", false, "Enable Bun Debug log")
+
 func main() {
-	r := db.Recepie{Made: false, Rating: 0, Title: "Fish And Chips", Url: "https://www.thespruceeats.com/best-fish-and-chips-recipe-434856"}
-
-	// recepie := Map{"Made": true, "Raiting": 7, "Title": "Hinkali", "Url": "https://hinkali.com"}
-	// CheckIfTitleExists(recepie["Title"])
-	ctx := context.Background()
-	client := db.FirebaseDB(ctx)
-	title := helpers.GetFieldTitle(&r, "Title")
-
-	db.AddRecepie(client, &r, title)
-
-	fmt.Println(title)
-	// AddCollectiosRecepie(recepie)
-	db.ReadCollection(ctx)
+	flag.Parse()
+	// Initialize the runtime
+	a := app.Application{}
+	fmt.Println("Hello")
+	client, err := a.LoadConfigurations()
+	fmt.Println("BYE")
+	if err != nil {
+		panic(err)
+	}
+	err = Start(client)
+	if err != nil {
+		panic(err)
+	}
 }

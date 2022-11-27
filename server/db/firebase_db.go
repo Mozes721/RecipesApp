@@ -6,29 +6,11 @@ import (
 	"log"
 
 	"cloud.google.com/go/firestore"
-	firebase "firebase.google.com/go"
-
 	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
 )
 
-func FirebaseDB(ctx context.Context) *firestore.Client {
-	opt := option.WithCredentialsFile("/home/mozes/serviceAccountKey.json")
-	app, err := firebase.NewApp(ctx, nil, opt)
-	if err != nil {
-		panic(err)
-	}
-	client, err := app.Firestore(ctx)
-	if err != nil {
-		panic(err)
-	}
-	return client
-}
-
-func ReadCollection(ctx context.Context) {
-	ct := context.Background()
+func ReadCollection(ctx context.Context, client *firestore.Client) {
 	projectID := "my-recepies"
-	client := FirebaseDB(ct)
 	iter := client.Collection(projectID).Documents(ctx)
 	for {
 		doc, err := iter.Next()
@@ -41,14 +23,14 @@ func ReadCollection(ctx context.Context) {
 		fmt.Println(doc.Data())
 	}
 }
-func AddRecepie(client *firestore.Client, r *Recepie, title string) HTTPError {
-	ok := checkCollection(client, title)
+func AddRecepie(client *firestore.Client, r Recepie) HTTPError {
+	ok := checkCollection(client, r.Title)
 	if ok {
 		fmt.Println("Apready exists")
 		return HTTPError{FlashMsg: "Title already exists"}
 	} else {
 		fmt.Println("Can add new recepie")
-		addCollectiosRecepie(r)
+		addCollectiosRecepie(context.Background(), client, r)
 		return HTTPError{FlashMsg: ""}
 	}
 }
@@ -75,9 +57,7 @@ func checkCollection(client *firestore.Client, title string) bool {
 
 }
 
-func addCollectiosRecepie(recepie *Recepie) {
-	ctx := context.Background()
-	client := FirebaseDB(ctx)
+func addCollectiosRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) {
 	defer client.Close()
 	_, _, err := client.Collection("my-recepies").Add(ctx, map[string]interface{}{
 		"Made":   recepie.Made,
