@@ -69,3 +69,31 @@ func addCollectiosRecepie(ctx context.Context, client *firestore.Client, recepie
 		log.Fatalf("Failed adding alovelace: %v", err)
 	}
 }
+
+//func UpdateRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) {
+//	_, err := client.Collection("cities").Where("Title", "==", recepie.Title).Documents(ctx)
+//
+//	})
+//}
+func UpdateRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) error {
+	_, err := client.Collection("cities").Where("Title", "==", title)Set(ctx, map[string]interface{{
+		"name":    "District of Columbia",
+		"country": "USA",
+	})
+	if err != nil {
+		log.Printf("adding city DC: %s", err)
+	}
+	// [START firestore_data_set_field]
+	_, err = client.Collection("cities").Doc("DC").Update(ctx, []firestore.Update{
+		{
+			Path:  "capital",
+			Value: true,
+		},
+	})
+	if err != nil {
+		// Handle any errors in an appropriate way, such as returning them.
+		log.Printf("An error has occurred: %s", err)
+	}
+	// [END firestore_data_set_field]
+	return err
+}

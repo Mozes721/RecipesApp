@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"github.com/RecepieApp/server/app"
 	. "github.com/RecepieApp/server/runtime"
 	//
@@ -27,9 +26,7 @@ func main() {
 	flag.Parse()
 	// Initialize the runtime
 	a := app.Application{}
-	fmt.Println("Hello")
 	client, err := a.LoadConfigurations()
-	fmt.Println("BYE")
 	if err != nil {
 		panic(err)
 	}
