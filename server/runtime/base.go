@@ -1,9 +1,10 @@
 package runtime
 
 import (
-	"cloud.google.com/go/firestore"
 	"context"
 	"fmt"
+
+	"cloud.google.com/go/firestore"
 	. "github.com/RecepieApp/server/db"
 	. "github.com/RecepieApp/server/helpers"
 )
@@ -16,7 +17,7 @@ func Start(client *firestore.Client) error {
 	fmt.Println(r)
 	//AddRecepie(client, Recepie(r))
 	//
-	//ReadCollection(ctx, client)
+	ReadCollection(ctx, client)
 	UpdateRecepie(ctx, client, Recepie(r))
 	//ReadCollection(ctx, client)
 	return nil
