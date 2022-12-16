@@ -24,18 +24,18 @@ func ReadCollection(ctx context.Context, client *firestore.Client) {
 	}
 }
 func AddRecepie(client *firestore.Client, r Recepie) HTTPError {
-	ok := checkCollection(client, r.Title)
-	if ok {
-		fmt.Println("Apready exists")
+	exists := checkIfExists(client, r.Title)
+	if exists {
+		fmt.Println("Already exists")
 		return HTTPError{FlashMsg: "Title already exists"}
 	} else {
-		fmt.Println("Can add new recepie")
+
 		addCollectiosRecepie(context.Background(), client, r)
 		return HTTPError{FlashMsg: ""}
 	}
 }
 
-func checkCollection(client *firestore.Client, title string) bool {
+func checkIfExists(client *firestore.Client, title string) bool {
 	ctx := context.Background()
 	var exists bool
 	iter := client.Collection("my-recepies").Where("Title", "==", title).Documents(ctx)
@@ -57,6 +57,27 @@ func checkCollection(client *firestore.Client, title string) bool {
 
 }
 
+func getRecepieID(client *firestore.Client, title string) string {
+	ctx := context.Background()
+	var uid string
+	iter := client.Collection("my-recepies").Where("Title", "==", title).Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Fatalf("Failed to iterate: %v", err)
+		}
+		if doc.Data() != nil {
+			uid = doc.Ref.ID
+		} else {
+			uid = ""
+		}
+	}
+	return uid
+}
+
 func addCollectiosRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) {
 	defer client.Close()
 	_, _, err := client.Collection("my-recepies").Add(ctx, map[string]interface{}{
@@ -70,20 +91,30 @@ func addCollectiosRecepie(ctx context.Context, client *firestore.Client, recepie
 	}
 }
 
-//	func UpdateRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) {
-//		_, err := client.Collection("cities").Where("Title", "==", recepie.Title).Documents(ctx)
-//
-//		})
-//	}
 func UpdateRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) error {
-	_, err := client.Collection("my-recepies").Doc(recepie).Set(ctx, map[string]interface{}{
+	fmt.Println("Can add new recepie")
+	uid := getRecepieID(client, recepie.Title)
+	_, err := client.Collection("my-recepies").Doc(uid).Set(ctx, map[string]interface{}{
 		"Made":   recepie.Made,
 		"Rating": recepie.Rating,
+		"Title":  recepie.Title,
+		"Url":    recepie.Url,
 	})
 	if err != nil {
 		// Handle any errors in an appropriate way, such as returning them.
 		log.Printf("An error has occurred: %s", err)
 	}
 	// [END firestore_data_set_field]
+	return nil
+}
+
+func DeleteRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) error {
+	uid := getRecepieID(client, recepie.Title)
+	_, err := client.Collection("my-recepies").Doc(uid).Delete(ctx)
+	if err != nil {
+		return err
+		log.Printf("error deleting user: %v\n", err)
+	}
+	log.Printf("Successfully deleted recepie %v", err)
 	return nil
 }

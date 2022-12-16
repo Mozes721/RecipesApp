@@ -1,14 +1,5 @@
 package db
 
-//type Data struct {
-//	Recepies []Recepie
-//	DB       gin.Engine
-//}
-//
-//type DbCallers struct {
-//	ctx context.Context
-//}
-//
 type Recepie struct {
 	Made   bool
 	Rating int
