@@ -9,7 +9,21 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-func ReadCollection(ctx context.Context, client *firestore.Client) {
+type Recepie struct {
+	Made   bool
+	Rating int
+	Title  string
+	Url    string
+}
+
+type HTTPError struct {
+	Err      error
+	Code     int
+	FlashMsg string
+	URL      string
+}
+
+func ReadCollection(ctx context.Context, client *firestore.Client) map[string]interface{} {
 	projectID := "my-recepies"
 	iter := client.Collection(projectID).Documents(ctx)
 	for {
@@ -20,8 +34,9 @@ func ReadCollection(ctx context.Context, client *firestore.Client) {
 		if err != nil {
 			log.Fatalf("Failed to iterate: %v", err)
 		}
-		fmt.Println(doc.Data())
+		return doc.Data()
 	}
+	return nil
 }
 func AddRecepie(client *firestore.Client, r Recepie) HTTPError {
 	exists := checkIfExists(client, r.Title)
