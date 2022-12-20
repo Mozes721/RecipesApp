@@ -1,11 +1,10 @@
 package api
 
 import (
-	"cloud.google.com/go/firestore"
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRoutes(r *gin.Engine, client *firestore.Client) {
+func SetupRoutes(r *gin.Engine) {
 
 	cors := func(c *gin.Context) {
 		c.Writer.Header().Add("access-control-allow-origin", "*")

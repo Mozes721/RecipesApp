@@ -23,9 +23,10 @@ type HTTPError struct {
 	URL      string
 }
 
-func ReadCollection(ctx context.Context, client *firestore.Client) map[string]interface{} {
+func ReadCollection(ctx context.Context, client *firestore.Client) (map[string]interface{}, error) {
 	projectID := "my-recepies"
 	iter := client.Collection(projectID).Documents(ctx)
+	defer client.Close()
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -34,9 +35,9 @@ func ReadCollection(ctx context.Context, client *firestore.Client) map[string]in
 		if err != nil {
 			log.Fatalf("Failed to iterate: %v", err)
 		}
-		return doc.Data()
+		return doc.Data(), nil
 	}
-	return nil
+	return nil, nil
 }
 func AddRecepie(client *firestore.Client, r Recepie) HTTPError {
 	exists := checkIfExists(client, r.Title)

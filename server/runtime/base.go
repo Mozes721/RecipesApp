@@ -1,17 +1,14 @@
 package runtime
 
 import (
-	"cloud.google.com/go/firestore"
 	"github.com/RecepieApp/server/api"
 	"github.com/gin-gonic/gin"
 )
 
-func Start(client *firestore.Client) error {
-
+func Start() error {
 	r := gin.Default()
-	api.SetupRoutes(r, client)
+	api.SetupRoutes(r)
 	r.Run(":8000")
-
 	return nil
 }
 
