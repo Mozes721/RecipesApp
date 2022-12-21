@@ -15,8 +15,8 @@ func SetupRoutes(r *gin.Engine) {
 	recepiesRouter := r.Group("/v1")
 	{
 		recepiesRouter.GET("/", allRecepies)
-		//recepiesRouter.POST("/new-recepie/:id", NewRecepie)
-		//recepiesRouter.DELETE("/delete/:id", DeleteRecepie)
-		//recepiesRouter.PATCH("/find-recepie/:id", UpdateRecepie)
+		recepiesRouter.POST("/add", newRecepie)
+		recepiesRouter.PATCH("/update", updateRecepie)
+		recepiesRouter.DELETE("/delete", deleteRecepie)
 	}
 }
