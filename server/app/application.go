@@ -1,12 +1,13 @@
 package app
 
 import (
-	"cloud.google.com/go/firestore"
 	"context"
+
+	"cloud.google.com/go/firestore"
 	. "github.com/RecepieApp/server/config"
 )
 
-func LoadFirebaseConnection() (*firestore.Client, error) {
+func LoadConfigurations() (*firestore.Client, error) {
 	ctx := context.Background()
 	client := FirebaseDB(ctx)
 	if client == nil {
