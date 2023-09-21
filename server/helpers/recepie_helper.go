@@ -9,10 +9,10 @@ func Recepies(title string, url string) RecepieHelper {
 	}
 }
 
-func (r *RecepieHelper) Modiify(rating int) {
+func (r *RecepieHelper) Modify(rating int) {
 	*r = RecepieHelper{
-		Made:   true,
-		Rating: rating,
+		Made:   r.Made,
+		Rating: r.Rating,
 		Title:  r.Title,
 		Url:    r.Url,
 	}

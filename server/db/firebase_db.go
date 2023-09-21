@@ -9,9 +9,11 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-func ReadCollection(ctx context.Context, client *firestore.Client) {
+func ReadCollection(ctx context.Context, client *firestore.Client) *firestore.DocumentSnapshot {
 	projectID := "my-recepies"
 	iter := client.Collection(projectID).Documents(ctx)
+	var data *firestore.DocumentSnapshot
+
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -20,9 +22,13 @@ func ReadCollection(ctx context.Context, client *firestore.Client) {
 		if err != nil {
 			log.Fatalf("Failed to iterate: %v", err)
 		}
-		fmt.Println(doc.Data())
+
+		data = doc
 	}
+
+	return data
 }
+
 func AddRecepie(client *firestore.Client, r Recepie) HTTPError {
 	ok := checkCollection(client, r.Title)
 	if ok {
@@ -70,30 +76,27 @@ func addCollectiosRecepie(ctx context.Context, client *firestore.Client, recepie
 	}
 }
 
-//func UpdateRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) {
-//	_, err := client.Collection("cities").Where("Title", "==", recepie.Title).Documents(ctx)
-//
-//	})
-//}
 func UpdateRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) error {
-	_, err := client.Collection("cities").Where("Title", "==", title)Set(ctx, map[string]interface{{
-		"name":    "District of Columbia",
-		"country": "USA",
-	})
-	if err != nil {
-		log.Printf("adding city DC: %s", err)
+	// First, check if the document with the specified title exists
+	exists := checkCollection(client, recepie.Title)
+	if !exists {
+		return fmt.Errorf("Recipe with Title '%s' not found", recepie.Title)
 	}
-	// [START firestore_data_set_field]
-	_, err = client.Collection("cities").Doc("DC").Update(ctx, []firestore.Update{
+
+	_, err := client.Collection("my-recepies").Doc(recepie.Title).Update(ctx, []firestore.Update{
 		{
-			Path:  "capital",
-			Value: true,
+			Path:  "Made",
+			Value: recepie.Made,
 		},
+		{
+			Path:  "Rating",
+			Value: recepie.Rating,
+		},
+		// Add other fields you want to update
 	})
 	if err != nil {
-		// Handle any errors in an appropriate way, such as returning them.
-		log.Printf("An error has occurred: %s", err)
+		return fmt.Errorf("Failed updating document: %v", err)
 	}
-	// [END firestore_data_set_field]
-	return err
+
+	return nil
 }
