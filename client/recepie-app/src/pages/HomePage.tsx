@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import Searched from '../components/searched/Searched';
-import SearchedResult from '../components/searched/SearchedResult';
-import TableTypes from "../components/TableTypes";
+import React, {useState} from 'react';
+import { AiOutlineMail} from "react-icons/ai";
+import { RiLockPasswordFill, RiLoginBoxLine} from "react-icons/ri";
+import {FcGoogle} from "react-icons/fc"
 const HomePage: React.FC = () => {
     const [text, setText] = useState<string | number>("");
     const [isModalOpen, setModalState] = React.useState(false);
@@ -10,20 +10,45 @@ const HomePage: React.FC = () => {
         setText(val);
     }
   return (
-      <section className="section py-4">
+    <section className="hero is-info is-fullheight has-background-dark">
+    <div className="hero-body">
         <div className="container">
-          <div className="column is-multiline is-centered">
-            <div className="column has-text-centered">
-              <span className="has-text-gray-dark">Welcome to My Recepie's</span>
-              <h2 className="mt-2 mb-4 is-size-1 is-size-3-mobile has-text-weight-bold">Find  recipes of your liking based on Calories.</h2>
-                <p className="subtitle has-text-gray mb-5">Otherwise you can click the Table <button className="button is-success" onClick={toggleModal}>here</button> and copy one of the meal options</p>
-              <Searched text={callBack} />
+            <div className="columns is-centered">
+                <div className="column is-three-fifths-desktop is-three-quarters-tablet has-text-centered">
+                    <p className="bd-notification is-primary">
+                        <p className="title">
+                            Login
+                        </p>
+                        <div className="card">
+                            <div className="card-content">
+                                <div className="field">
+                                  <label className="label has-text-left">Email</label>
+                                    <p className="control has-icons-left has-icons-right">
+                                        <input className="input" type="AiOutlineMail" placeholder="Email" />
+                                        <AiOutlineMail className="icon is-small is-left"/>
+                                    </p>
+                                </div>
+                                <div className="field">
+                                  <label className="label has-text-left">Password</label>
+                                    <p className="control has-icons-left">
+                                        <input className="input" type="password" placeholder="Password" />
+                                        <RiLockPasswordFill className="icon is-small is-left"/>
+                                    </p>
+                                </div>
+                                <div className="buttons is-centered">
+                                    <a className="button is-primary"><span className="icon is-small"><RiLoginBoxLine /></span><span>Login</span></a>
+                                    <a className="button is-link"><span className="icon is-small"><FcGoogle /></span><span>Login with Google</span></a>
+                                </div>
+                                <hr />
+                                <p><a href="#" className="has-text-link has-text-weight-bold">Not yet registered?</a></p>
+                            </div>
+                        </div>
+                    </p>
+                </div>
             </div>
-          </div>
-            <TableTypes isOpen={isModalOpen} onClose={toggleModal} />
-            <SearchedResult  text={text} />
         </div>
-      </section>
+    </div>
+</section>
   )
 }
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Burger from "./SideBar";
-
+import {LuVegan} from "react-icons/lu";
 
 
 const Nav: React.FC<{}> = () => {
@@ -58,11 +58,9 @@ const Nav: React.FC<{}> = () => {
                                 </NavLink>
                             </span>
                             <span className="navbar-item">
-                                <NavLink className="button is-white is-outlined" to="vegan-vegetarian">
-                                    <span className="icon">
-                                        <i className="fa fa-github"></i>
-                                    </span>
-                                    <span>Vegan&Vegetarian</span>
+                                <NavLink className="button is-white is-outlined p-3" to="vegan-vegetarian">
+                                    <LuVegan />
+                                    <span className="ml-1">Vegan&Vegetarian</span>
                                 </NavLink>
                             </span>
                             <span className="navbar-item">
