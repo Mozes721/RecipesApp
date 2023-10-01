@@ -2,4 +2,5 @@ Create React app with Bulma CSS use Typescript
 Pages Cousine, veg, Whole30, Keto/Paleo, My Yumms(store from db) 
 Can see description of recipes and can add to wish list
 When added to wish list add Name of recipe and Type 
+Add authentication
 

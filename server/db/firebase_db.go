@@ -9,6 +9,8 @@ import (
 	"google.golang.org/api/iterator"
 )
 
+
+
 func ReadCollection(ctx context.Context, client *firestore.Client) *firestore.DocumentSnapshot {
 	projectID := "my-recepies"
 	iter := client.Collection(projectID).Documents(ctx)
@@ -29,11 +31,11 @@ func ReadCollection(ctx context.Context, client *firestore.Client) *firestore.Do
 	return data
 }
 
-func AddRecepie(client *firestore.Client, r Recepie) HTTPError {
+func AddRecepie(client *firestore.Client, r Recepie) error {
 	ok := checkCollection(client, r.Title)
 	if ok {
 		fmt.Println("Apready exists")
-		return HTTPError{FlashMsg: "Title already exists"}
+		return fmt.Errorf({FlashMsg: "Title already exists"})
 	} else {
 		fmt.Println("Can add new recepie")
 		addCollectiosRecepie(context.Background(), client, r)
@@ -63,7 +65,7 @@ func checkCollection(client *firestore.Client, title string) bool {
 
 }
 
-func addCollectiosRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) {
+func addCollectiosRecepie(ctx context.Context, client *firestore.Client, recepie helpers.Recepie) {
 	defer client.Close()
 	_, _, err := client.Collection("my-recepies").Add(ctx, map[string]interface{}{
 		"Made":   recepie.Made,

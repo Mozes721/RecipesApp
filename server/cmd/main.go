@@ -5,10 +5,6 @@ import (
 
 	"github.com/RecepieApp/server/app"
 	"github.com/RecepieApp/server/runtime"
-	// . "github.com/RecepieApp/server/runtime"
-	//
-	//"github.com/RecepieApp/server/db"
-	//"github.com/RecepieApp/server/helpers"
 )
 
 var _ = flag.Bool("debug", false, "Enable Bun Debug log")
