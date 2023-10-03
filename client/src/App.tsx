@@ -25,6 +25,6 @@ import  YummsPage from './pages/YummsPage';
     <script async type="text/javascript" src="../js/bulma.js"></script>
     </>
   );
-}
+}   
 
 export default App;

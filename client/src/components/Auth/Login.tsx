@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 import { AiOutlineMail} from "react-icons/ai";
 import { RiLockPasswordFill, RiLoginBoxLine} from "react-icons/ri";
 import {FcGoogle} from "react-icons/fc"
+import { NavLink, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../config/firebase-config';
 
 interface LoginFormProps {
     onSwitchForm: () => void;
@@ -9,8 +12,22 @@ interface LoginFormProps {
 
 
   const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
+    const navigate = useNavigate();
     const [loginEmail, setLoginEmail] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
+
+
+    // const onSubmit = async (e) => {
+    //   e.preventDefault()
+
+    //   await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+    //     .then(userCredential) => {
+    //       const user = useCredential.user;
+    //       console.log(user);
+    //       navigate("/yumms")
+
+    //     }
+      
     return (
       <form>
         <div className="field">
