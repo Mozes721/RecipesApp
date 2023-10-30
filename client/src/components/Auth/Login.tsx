@@ -1,42 +1,47 @@
-import React, {useState} from 'react';
-import { AiOutlineMail} from "react-icons/ai";
-import { RiLockPasswordFill, RiLoginBoxLine} from "react-icons/ri";
-import {FcGoogle} from "react-icons/fc"
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { AiOutlineMail } from "react-icons/ai";
+import { RiLockPasswordFill, RiLoginBoxLine } from "react-icons/ri";
+import { FcGoogle } from "react-icons/fc";
+import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase-config';
 
 interface LoginFormProps {
-    onSwitchForm: () => void;
+  onSwitchForm: () => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
+  const navigate = useNavigate();
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  const onLogin = (e: React.ChangeEvent<any>) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigate("/yumms");
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
   }
 
-
-  const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
-    const navigate = useNavigate();
-    const [loginEmail, setLoginEmail] = useState("");
-    const [loginPassword, setLoginPassword] = useState("");
-
-
-    // const onSubmit = async (e) => {
-    //   e.preventDefault()
-
-    //   await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-    //     .then(userCredential) => {
-    //       const user = useCredential.user;
-    //       console.log(user);
-    //       navigate("/yumms")
-
-    //     }
-      
     return (
       <form>
         <div className="field">
           <label className="label has-text-left">Email</label>
           <p className="control has-icons-left has-icons-right">
-            <input className="input" type="AiOutlineMail" placeholder="Email" 
+            <input 
+                className="input" 
+                type="email" 
+                placeholder="Email" 
                 onChange={(event) => {
-                    setLoginEmail(event.target.value);
-                }}
+                      setLoginEmail(event.target.value);
+                  }}
             />
             <AiOutlineMail className="icon is-small is-left" />
           </p>
@@ -44,7 +49,10 @@ interface LoginFormProps {
         <div className="field">
           <label className="label has-text-left">Password</label>
           <p className="control has-icons-left">
-            <input className="input" type="password" placeholder="Password" 
+            <input 
+                className="input" 
+                type="password" 
+                placeholder="Password" 
                 onChange={(event) => {
                     setLoginPassword(event.target.value);
                 }}
@@ -57,7 +65,7 @@ interface LoginFormProps {
             <span className="icon is-small">
               <RiLoginBoxLine />
             </span>
-            <span>Login</span>
+            <span onClick={onLogin}>Login</span>
           </a>
           <a className="button is-link">
             <span className="icon is-small">
@@ -69,6 +77,7 @@ interface LoginFormProps {
       </form>
     );
   };
+  
   
   export default LoginForm;
   

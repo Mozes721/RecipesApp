@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { AiOutlineMail} from "react-icons/ai";
-import { RiLockPasswordFill, RiLoginBoxLine} from "react-icons/ri";
+import { RiLockPasswordFill, RiLoginBoxLine} from "react-icons/ri"
+import {  useNavigate } from 'react-router-dom';
+import { auth } from '../../config/firebase-config';
 
 import {FcGoogle} from "react-icons/fc"
 
@@ -8,10 +11,29 @@ interface RegisterFormProps {
     onSwitchForm: () => void;
   }
 
+
   const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchForm }) => {
+    const navigate = useNavigate();
+
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+    const onRegister = (e: React.ChangeEvent<any>) => {
+      e.preventDefault();
+      createUserWithEmailAndPassword(auth, registerEmail, registerPassword)
+      .then((userCredential) => {
+          const user = userCredential.user;
+          navigate("/yumms")
+          console.log(user);
+      })
+      .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage)
+      });
+  }
+
     return (
       <form>
         <div className="field">
@@ -52,7 +74,7 @@ interface RegisterFormProps {
             <span className="icon is-small">
               <RiLoginBoxLine />
             </span>
-            <span>Register</span>
+            <span onClick={onRegister}>Register</span>
           </a>
           <a className="button is-link">
             <span className="icon is-small">
@@ -64,6 +86,7 @@ interface RegisterFormProps {
       </form>
     );
   };
+  
   
   export default RegisterForm;
   
