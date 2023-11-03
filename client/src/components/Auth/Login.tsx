@@ -2,33 +2,16 @@ import React, { useState } from 'react';
 import { AiOutlineMail } from "react-icons/ai";
 import { RiLockPasswordFill, RiLoginBoxLine } from "react-icons/ri";
 import { FcGoogle } from "react-icons/fc";
-import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../config/firebase-config';
 
 interface LoginFormProps {
   onSwitchForm: () => void;
 }
 
+
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
-  const navigate = useNavigate();
+
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-
-  const onLogin = (e: React.ChangeEvent<any>) => {
-    e.preventDefault();
-    signInWithEmailAndPassword(auth, loginEmail, loginPassword)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        navigate("/yumms");
-        console.log(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-      });
-  }
 
     return (
       <form>
@@ -65,7 +48,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
             <span className="icon is-small">
               <RiLoginBoxLine />
             </span>
-            <span onClick={onLogin}>Login</span>
+            <span>Login</span>
           </a>
           <a className="button is-link">
             <span className="icon is-small">
@@ -79,5 +62,4 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
   };
   
   
-  export default LoginForm;
-  
+export default LoginForm;

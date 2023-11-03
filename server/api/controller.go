@@ -6,6 +6,19 @@ import (
 )
 
 func SetRoutes(router *gin.Engine, client *firestore.Client) {
+	
+	router.POST("/login", func(c *gin.Context) {
+
+	})
+
+	router.POST("/register", func(c *gin.Context) {
+		
+	})
+
+	router.POST("/googleLogin", func(c *gin.Context) {
+		
+	})
+
 	router.GET("/", func(c *gin.Context) {
 		showRecepies(c, client)
 	})

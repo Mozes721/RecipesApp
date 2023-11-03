@@ -3,10 +3,10 @@ package helpers
 import (
 	"reflect"
 
-	"github.com/RecepieApp/server/db"
+	"github.com/RecepieApp/server/models"
 )
 
-func GetFieldTitle(e *db.Recepie, field string) string {
+func GetFieldTitle(e *models.Recepie, field string) string {
 	r := reflect.ValueOf(e)
 	f := reflect.Indirect(r).FieldByName(field)
 	return f.String()

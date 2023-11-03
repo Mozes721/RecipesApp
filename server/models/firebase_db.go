@@ -1,4 +1,4 @@
-package db
+package models
 
 import (
 	"context"
@@ -15,7 +15,8 @@ func ReadCollection(ctx context.Context, client *firestore.Client) *firestore.Do
 	projectID := "my-recepies"
 	iter := client.Collection(projectID).Documents(ctx)
 	var data *firestore.DocumentSnapshot
-
+	auth := client.AuthService()
+	auth := client.FireAuth()
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {

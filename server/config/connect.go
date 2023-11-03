@@ -1,26 +1,46 @@
 package config
 
 import (
-	"context"
-	"log"
-
 	"cloud.google.com/go/firestore"
+	"context"
 	firebase "firebase.google.com/go"
+	"firebase.google.com/go/auth"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/option"
+	"log"
 )
 
-func FirebaseDB(ctx context.Context) *firestore.Client {
+func FirebaseApp(ctx context.Context) (*firebase.App, error) {
 	opt := option.WithCredentialsFile("/mnt/c/Users/RichardTaujenis/Desktop/RecipesApp/server/config/account_key.json")
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
-		panic(err)
+		return nil, err
+	}
+	return app, nil
+}
+
+func GetFirestoreClient(ctx context.Context) (*firestore.Client, error) {
+	app, err := FirebaseApp(ctx)
+	if err != nil {
+		return nil, err
 	}
 	client, err := app.Firestore(ctx)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return client
+	return client, nil
+}
+
+func GetAuthClient(ctx context.Context) (*auth.Client, error) {
+	app, err := FirebaseApp(ctx)
+	if err != nil {
+		return nil, err
+	}
+	authClient, err := app.Auth(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return authClient, nil
 }
 
 func checkErr(err error, msg string) {

@@ -4,15 +4,29 @@ import (
 	"context"
 
 	"cloud.google.com/go/firestore"
+	"firebase.google.com/go/auth"
 	. "github.com/RecepieApp/server/config"
 )
 
-func LoadConfigurations() (*firestore.Client, error) {
-	ctx := context.Background()
-	client := FirebaseDB(ctx)
-	if client == nil {
-		return nil, nil
-	}
+type Application struct {
+	FireClient *firestore.Client
+	FireAuth *auth.Client
+}
 
-	return client, nil
+func (a *Application) LoadConfigurations() error {
+	ctx := context.Background()
+
+	fireClient, err := GetFirestoreClient(ctx)
+	if err != nil {
+        return err
+    }
+	a.FireClient = fireClient
+
+	fireAuth, err := GetAuthClient(ctx)
+	if err != nil {
+        return err
+    }
+	a.FireAuth = fireAuth
+
+	return nil
 }
