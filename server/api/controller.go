@@ -2,21 +2,23 @@ package api
 
 import (
 	"cloud.google.com/go/firestore"
+	"firebase.google.com/go/auth"
 	"github.com/gin-gonic/gin"
 )
 
-func SetRoutes(router *gin.Engine, client *firestore.Client) {
-	
-	router.POST("/login", func(c *gin.Context) {
+func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client) {
+	//router.Use(middleware.AuthJWT(auth))
 
+	router.POST("/login", func(c *gin.Context) {
+		login(c, auth)
 	})
 
 	router.POST("/register", func(c *gin.Context) {
-		
+		register(c, auth)
 	})
 
 	router.POST("/googleLogin", func(c *gin.Context) {
-		
+		googleLogin(c, auth)
 	})
 
 	router.GET("/", func(c *gin.Context) {

@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"github.com/gobuffalo/envy"
 
 	"cloud.google.com/go/firestore"
 	"firebase.google.com/go/auth"
@@ -10,7 +11,8 @@ import (
 
 type Application struct {
 	FireClient *firestore.Client
-	FireAuth *auth.Client
+	FireAuth   *auth.Client
+	ListenPort string
 }
 
 func (a *Application) LoadConfigurations() error {
@@ -18,15 +20,17 @@ func (a *Application) LoadConfigurations() error {
 
 	fireClient, err := GetFirestoreClient(ctx)
 	if err != nil {
-        return err
-    }
+		return err
+	}
 	a.FireClient = fireClient
 
 	fireAuth, err := GetAuthClient(ctx)
 	if err != nil {
-        return err
-    }
+		return err
+	}
 	a.FireAuth = fireAuth
+
+	a.ListenPort = envy.Get("PORT", "8080")
 
 	return nil
 }

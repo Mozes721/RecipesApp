@@ -1,34 +1,24 @@
 package runtime
 
 import (
-	"fmt"
 	"context"
+	"firebase.google.com/go/auth"
 	"github.com/RecepieApp/server/api"
 	"github.com/RecepieApp/server/app"
-	"github.com/RecepieApp/server/config"
-	"firebase.google.com/go/auth"
-	// "github.com/RecepieApp/server/middleware"
 	"github.com/gin-gonic/gin"
 	"log"
 )
 
 func Start(a *app.Application) error {
-	ctx := context.Background()
-
 	router := gin.Default()
 
-	router.Use(config.Cors())
+	err := router.Run(":" + a.ListenPort)
+	if err != nil {
+		return err
+	}
 
-	// router.Use(middleware.Authorize(app.Application.FireAuth))
+	api.SetRoutes(router, a.FireClient, a.FireAuth)
 
-	api.SetRoutes(router, a.FireClient)
-
-
-	user := createUser(ctx, a.FireAuth)
-    // if err != nil {
-    //     return err
-    // }
-	fmt.Println(user)
 	return nil
 }
 
@@ -67,12 +57,11 @@ func createUser(ctx context.Context, client *auth.Client) *auth.UserRecord {
 //     return user, nil
 // }
 
-
 // Using auth.UserRecord to retrieve user information
 func getUserInfo(authClient *auth.Client, uid string) (*auth.UserRecord, error) {
-    user, err := authClient.GetUser(context.Background(), uid)
-    if err != nil {
-        return nil, err
-    }
-    return user, nil
+	user, err := authClient.GetUser(context.Background(), uid)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
