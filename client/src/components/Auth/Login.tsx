@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import { AiOutlineMail } from "react-icons/ai";
 import { RiLockPasswordFill, RiLoginBoxLine } from "react-icons/ri";
 import { FcGoogle } from "react-icons/fc";
+import { auth } from "../../config/firebase-config"
+import { login } from "../../api/Auth/login";
+import { signInWithGoogle } from "../../api/Auth/googleLogin";
+import { useNavigate } from 'react-router-dom';
+
+
 
 interface LoginFormProps {
   onSwitchForm: () => void;
@@ -12,6 +18,31 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const navigate = useNavigate();
+
+    const customLogin = (e: React.ChangeEvent<any>) => {
+        login(auth, loginEmail, loginPassword)
+            .then((user) => {
+                // Successful sign-in, navigate to "/yumms"
+                navigate("/yumms");
+                console.log(user);
+            })
+            .catch((error) => {
+                console.log(error.code, error.message);
+            });
+    }
+
+    const googleSignIn = () => {
+        signInWithGoogle(auth) // Pass your auth instance here
+            .then((user) => {
+                // Successful sign-in, navigate to "/yumms"
+                navigate("/yumms");
+                console.log(user);
+            })
+            .catch((error) => {
+                console.log(error.code, error.message);
+            });
+    }
 
     return (
       <form>
@@ -48,13 +79,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
             <span className="icon is-small">
               <RiLoginBoxLine />
             </span>
-            <span>Login</span>
+            <span onClick={(e) => customLogin(e)}>Login</span>
           </a>
           <a className="button is-link">
             <span className="icon is-small">
               <FcGoogle />
             </span>
-            <span>Login with Google</span>
+            <span onClick={googleSignIn}>Login with Google</span>
           </a>
         </div>
       </form>

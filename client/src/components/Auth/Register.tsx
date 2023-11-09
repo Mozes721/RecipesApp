@@ -3,6 +3,10 @@ import { AiOutlineMail} from "react-icons/ai";
 import { RiLockPasswordFill, RiLoginBoxLine} from "react-icons/ri"
 
 import {FcGoogle} from "react-icons/fc"
+import { auth } from "../../config/firebase-config";
+import { signIn } from "../../api/Auth/signin";
+import { useNavigate } from 'react-router-dom';
+import {signInWithGoogle} from "../../api/Auth/googleLogin";
 
 interface RegisterFormProps {
     onSwitchForm: () => void;
@@ -15,7 +19,40 @@ interface RegisterFormProps {
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const navigate = useNavigate();
 
+    const customRegister = (e: React.ChangeEvent<any>) => {
+          e.preventDefault();
+          if (registerPassword !== confirmPassword) {
+              alert("Passwords don't match")
+          } else {
+              signIn(auth, registerEmail, registerPassword)
+                  .then((user) => {
+                      // Successful sign-in, navigate to "/yumms"
+                      navigate("/yumms");
+                      console.log(user);
+                  })
+                  .catch((error) => {
+                      // Handle the error here
+                      const errorCode = error.code;
+                      const errorMessage = error.message;
+                      console.log(errorCode, errorMessage);
+                      // You can show an error message to the user or perform other error handling here
+                  });
+          }
+      }
+
+      const googleSignIn = () => {
+          signInWithGoogle(auth) // Pass your auth instance here
+              .then((user) => {
+                  // Successful sign-in, navigate to "/yumms"
+                  navigate("/yumms");
+                  console.log(user);
+              })
+              .catch((error) => {
+                  console.log(error.code, error.message);
+              });
+      }
 
     return (
       <form>
@@ -57,13 +94,13 @@ interface RegisterFormProps {
             <span className="icon is-small">
               <RiLoginBoxLine />
             </span>
-            <span>Register</span>
+            <span onClick={(e) => customRegister(e)}>Register</span>
           </a>
           <a className="button is-link">
             <span className="icon is-small">
               <FcGoogle />
             </span>
-            <span>Login with Google</span>
+            <span onClick={googleSignIn}>Login with Google</span>
           </a>
         </div>
       </form>

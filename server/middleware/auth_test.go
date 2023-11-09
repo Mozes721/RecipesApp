@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"testing"
@@ -25,48 +26,34 @@ func (user User) TestLoginFirebaseHelper(t *testing.T) {
 	authClient, _ := config.GetAuthClient(ctx)
 	collectionClient, _ := config.GetFirestoreClient(ctx)
 
-	userRecord := createUser(ctx, authClient)
-	userRecord := createUser(ctx, collectionClient)
-	log.Printf("Successfully fetched user data: %v\n", userRecord)
+	//userRecord := createUser(ctx, authClient)
+
+	//loggedInuserRecord, err := loginUser(ctx, authClient)
+	//if err != nil {
+	//	log.Printf("Issue with logging with user : %v\n", loggedInuserRecord)
+	//}
+	u, _ := authClient.GetUsers(ctx)
+
+	//u, _ := authClient.GetUserByEmail(ctx, "testing@yahoo.com")
+	//fmt.Println(u.UserInfo)
+	//log.Printf("Successfully fetched user data: %v\n", userRecord)
+	//log.Printf("Successfully logged in with  user data: %v\n", loggedInuserRecord)
 }
 
 func getUserByEmail(ctx context.Context, email string, client *auth.Client) *auth.UserRecord {
 	// [START get_user_by_email_golang]
 	u, err := client.GetUserByEmail(ctx, email)
+
 	if err != nil {
 		log.Fatalf("error getting user by email %s: %v\n", email, err)
 	}
-	ok := client.GetUsers()
 
 	log.Printf("Successfully fetched user data: %v\n", u)
 	// [END get_user_by_email_golang]
 	return u
 }
 
-func verifyUserByEmail(ctx context.Context, client *auth.Client, email string) (*auth.UserRecord, error) {
-	// Create a UserIdentifier for the specified email
-	identifier := (&auth.UserToLookup{}).Email(email)
-
-	// Call GetUsers with the UserIdentifier
-	result, err := client.GetUsers(ctx, []auth.UserIdentifier{identifier})
-	if err != nil {
-		log.Fatalf("Error looking up user by email: %v\n", err)
-		return nil, err
-	}
-
-	if len(result.Users) == 0 {
-		log.Printf("User with email %s not found\n", email)
-		return nil, fmt.Errorf("User not found")
-	}
-
-	// Retrieve the user record
-	user := result.Users[0]
-	log.Printf("User found: %v\n", user)
-	return user, nil
-}
-
-
-func createUser(ctx context.Context, client *auth.Client) *auth.UserRecord {
+func createUser(ctx context.Context, client *auth.Client) (string, error) {
 	// [START create_user_golang]
 	params := (&auth.UserToCreate{}).
 		Email("user@example.com").
@@ -81,20 +68,29 @@ func createUser(ctx context.Context, client *auth.Client) *auth.UserRecord {
 		log.Fatalf("error creating user: %v\n", err)
 	}
 	log.Printf("Successfully created user: %v\n", u)
-	// [END create_user_golang]
-	return u
-}
 
-func loginUser(ctx context.Context, client *firestore.Client) *auth.UserRecord {
-	// [START create_user_golang]
-	params := (&auth.UserInfo{Email: }).
-		Email("Mozesthegreat@yahoo.com")
-
-	u, err := client.CreateUser(ctx, params)
+	token, err := client.CustomToken(context.Background(), u.UID)
 	if err != nil {
-		log.Fatalf("error creating user: %v\n", err)
+		return "", errors.New(fmt.Sprintf("failed to generate custom token: %v", token))
 	}
-	log.Printf("Successfully created user: %v\n", u)
 	// [END create_user_golang]
-	return u
+	return token, nil
 }
+
+//func loginUser(ctx context.Context, client *auth.Client) (string, error) {
+//	u, err := client.GetUserByEmail(ctx, "user@example.com")
+//
+//	if err != nil {
+//		log.Fatalf("error getting user by email %s: %v\n", email, err)
+//	}
+//	if err := bcrypt.CompareHashAndPassword([]byte(u.UserInfo), []byte(password)); err != nil {
+//		return "", errors.New("incorrect password")
+//	}
+//	token, err := client.CustomToken(context.Background(), user.ID)
+//	if err != nil {
+//		log.Printf("failed to generate custom token: %v", err)
+//		return "", errors.New("internal server error")
+//	}
+//
+//	return token, nil
+//}
