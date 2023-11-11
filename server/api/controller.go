@@ -3,22 +3,19 @@ package api
 import (
 	"cloud.google.com/go/firestore"
 	"firebase.google.com/go/auth"
+	md "github.com/RecepieApp/server/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client) {
-	//router.Use(middleware.AuthJWT(auth))
-
-	router.POST("/login", func(c *gin.Context) {
-		login(c, auth)
+	router.Use(func(c *gin.Context) {
+		if c.FullPath() != "/userID" {
+			md.AuthJWT(auth)(c)
+		}
 	})
 
-	router.POST("/register", func(c *gin.Context) {
-		register(c, auth)
-	})
-
-	router.POST("/googleLogin", func(c *gin.Context) {
-		googleLogin(c, auth)
+	router.GET("/userID", func(c *gin.Context) {
+		md.GenerateJWT(c, auth)
 	})
 
 	router.GET("/", func(c *gin.Context) {

@@ -15,8 +15,6 @@ func ReadCollection(ctx context.Context, client *firestore.Client) *firestore.Do
 	projectID := "my-recepies"
 	iter := client.Collection(projectID).Documents(ctx)
 	var data *firestore.DocumentSnapshot
-	auth := client.AuthService()
-	auth := client.FireAuth()
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -83,7 +81,7 @@ func UpdateRecepie(ctx context.Context, client *firestore.Client, recepie Recepi
 	// First, check if the document with the specified title exists
 	exists := checkCollection(client, recepie.Title)
 	if !exists {
-		return fmt.Errorf("Recipe with Title '%s' not found", recepie.Title)
+		return fmt.Errorf("failed updating document: %v", exists)
 	}
 
 	_, err := client.Collection("my-recepies").Doc(recepie.Title).Update(ctx, []firestore.Update{
@@ -95,7 +93,6 @@ func UpdateRecepie(ctx context.Context, client *firestore.Client, recepie Recepi
 			Path:  "Rating",
 			Value: recepie.Rating,
 		},
-		// Add other fields you want to update
 	})
 	if err != nil {
 		return fmt.Errorf("Failed updating document: %v", err)
