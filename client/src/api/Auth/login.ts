@@ -5,10 +5,10 @@ export function login(authInstance: Auth, loginEmail: string, loginPassword: str
         signInWithEmailAndPassword(authInstance, loginEmail, loginPassword)
             .then((userCredential) => {
                 const user = userCredential.user;
-                resolve(user); // Resolve with user data on success
+                resolve(user.uid); 
             })
             .catch((error) => {
-                reject(error); // Reject with the error on failure
+                reject(error); 
             });
     });
 }

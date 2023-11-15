@@ -14,7 +14,7 @@ func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client) 
 		}
 	})
 
-	router.GET("/userID", func(c *gin.Context) {
+	router.POST("/userID", func(c *gin.Context) {
 		md.GenerateJWT(c, auth)
 	})
 

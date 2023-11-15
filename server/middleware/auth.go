@@ -3,7 +3,9 @@ package middleware
 import (
 	"context"
 	"firebase.google.com/go/auth"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gobuffalo/envy"
 	"log"
 	"net/http"
 	"strings"
@@ -14,6 +16,13 @@ const (
 	authorizationHeader = "Authorization"
 	valName             = "FIREBASE_ID_TOKEN"
 )
+
+type User struct {
+	ID       string
+	Email    string
+	Password string
+	Phone    string
+}
 
 func AuthJWT(client *auth.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -40,11 +49,11 @@ func AuthJWT(client *auth.Client) gin.HandlerFunc {
 
 func GenerateJWT(c *gin.Context, client *auth.Client) {
 	ctx := context.Background()
-	type User struct {
-		UserID string `json:"userID"`
-	}
+	log.Printf("Request: %s %s", c.Request.Method, c.FullPath())
 
-	var user User
+	user := struct {
+		UserID string `json:"userID"`
+	}{}
 
 	if err := c.BindJSON(&user); err != nil {
 		c.JSON(400, gin.H{"error": "Invalid request body"})
@@ -56,5 +65,21 @@ func GenerateJWT(c *gin.Context, client *auth.Client) {
 		log.Fatalf("error minting custom token: %v\n", err)
 	}
 
+	log.Printf("Got custom token: %v\n", token)
 	c.JSON(http.StatusOK, token)
+}
+
+func CORSMiddleware() cors.Config {
+	clientPort := envy.Get("REACT_PORT", "http://localhost:3000")
+
+	corsConfig := cors.Config{
+		AllowOrigins:     []string{clientPort},
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
+
+	return corsConfig
 }

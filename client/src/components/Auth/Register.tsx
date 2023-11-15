@@ -5,6 +5,7 @@ import { RiLockPasswordFill, RiLoginBoxLine} from "react-icons/ri"
 import {FcGoogle} from "react-icons/fc"
 import { auth } from "../../config/firebase-config";
 import { signIn } from "../../api/Auth/signin";
+import {postUserID} from "../../api/Auth/postUserID";
 import { useNavigate } from 'react-router-dom';
 import {signInWithGoogle} from "../../api/Auth/googleLogin";
 
@@ -28,16 +29,14 @@ interface RegisterFormProps {
           } else {
               signIn(auth, registerEmail, registerPassword)
                   .then((user) => {
-                      // Successful sign-in, navigate to "/yumms"
                       navigate("/yumms");
-                      console.log(user);
+                      postUserID(user);
                   })
                   .catch((error) => {
-                      // Handle the error here
                       const errorCode = error.code;
                       const errorMessage = error.message;
                       console.log(errorCode, errorMessage);
-                      // You can show an error message to the user or perform other error handling here
+                      
                   });
           }
       }

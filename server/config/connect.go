@@ -5,7 +5,6 @@ import (
 	"context"
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
-	"github.com/gin-gonic/gin"
 	"google.golang.org/api/option"
 	"log"
 )
@@ -46,12 +45,5 @@ func GetAuthClient(ctx context.Context) (*auth.Client, error) {
 func checkErr(err error, msg string) {
 	if err != nil {
 		log.Fatalln(msg, err)
-	}
-}
-
-func Cors() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
-		c.Next()
 	}
 }
