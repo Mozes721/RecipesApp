@@ -1,11 +1,11 @@
 import React from 'react';
 import  Nav  from "./components/Navbar/Nav";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import  HomePage  from './pages/HomePage';
-import  KetoPaeloPage  from './pages/KetoPaleoPage';
-import  WholePopularPage from './pages/WholePopularPage';
-import  VegPage from './pages/VegPage';
-import  YummsPage from './pages/YummsPage';
+import  LoginRegister  from './pages/LoginRegister';
+import  KetoPaelo  from './pages/KetoPaleo';
+import  WholePopular from './pages/WholePopular';
+import  Veg from './pages/Veg';
+import  Yumms from './pages/Yumms';
 
  const App: React.FC = () => {
   return (
@@ -14,11 +14,11 @@ import  YummsPage from './pages/YummsPage';
         <Nav />
         <section className="hero is-fullheight">
             <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="keto-paelo" element={<KetoPaeloPage />} />
-                <Route path="whole-popular" element={<WholePopularPage />} />
-                <Route path="vegan-vegetarian" element={<VegPage />} />
-                <Route path="yumms" element={<YummsPage />} />
+                <Route path="/" element={<LoginRegister />} />
+                <Route path="keto-paelo" element={<KetoPaelo />} />
+                <Route path="whole-popular" element={<WholePopular />} />
+                <Route path="vegan-vegetarian" element={<Veg />} />
+                <Route path="yumms" element={<Yumms />} />
             </Routes>
         </section>
     </Router>

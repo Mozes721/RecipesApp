@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"context"
 	"firebase.google.com/go/auth"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -16,13 +15,6 @@ const (
 	authorizationHeader = "Authorization"
 	valName             = "FIREBASE_ID_TOKEN"
 )
-
-type User struct {
-	ID       string
-	Email    string
-	Password string
-	Phone    string
-}
 
 func AuthJWT(client *auth.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -45,28 +37,6 @@ func AuthJWT(client *auth.Client) gin.HandlerFunc {
 		c.Set(valName, idToken)
 		c.Next()
 	}
-}
-
-func GenerateJWT(c *gin.Context, client *auth.Client) {
-	ctx := context.Background()
-	log.Printf("Request: %s %s", c.Request.Method, c.FullPath())
-
-	user := struct {
-		UserID string `json:"userID"`
-	}{}
-
-	if err := c.BindJSON(&user); err != nil {
-		c.JSON(400, gin.H{"error": "Invalid request body"})
-		return
-	}
-
-	token, err := client.CustomToken(ctx, user.UserID)
-	if err != nil {
-		log.Fatalf("error minting custom token: %v\n", err)
-	}
-
-	log.Printf("Got custom token: %v\n", token)
-	c.JSON(http.StatusOK, token)
 }
 
 func CORSMiddleware() cors.Config {

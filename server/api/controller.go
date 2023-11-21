@@ -9,13 +9,7 @@ import (
 
 func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client) {
 	router.Use(func(c *gin.Context) {
-		if c.FullPath() != "/userID" {
-			md.AuthJWT(auth)(c)
-		}
-	})
-
-	router.POST("/userID", func(c *gin.Context) {
-		md.GenerateJWT(c, auth)
+		md.AuthJWT(auth)(c)
 	})
 
 	router.GET("/", func(c *gin.Context) {

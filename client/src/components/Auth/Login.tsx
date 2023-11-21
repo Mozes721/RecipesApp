@@ -4,16 +4,12 @@ import { RiLockPasswordFill, RiLoginBoxLine } from "react-icons/ri";
 import { FcGoogle } from "react-icons/fc";
 import { auth } from "../../config/firebase-config"
 import { login } from "../../api/Auth/login";
-import {postUserID} from "../../api/Auth/postUserID";
 import { signInWithGoogle } from "../../api/Auth/googleLogin";
 import { useNavigate } from 'react-router-dom';
-
-
 
 interface LoginFormProps {
   onSwitchForm: () => void;
 }
-
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
 
@@ -23,9 +19,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
 
     const customLogin = (e: React.ChangeEvent<any>) => {
         login(auth, loginEmail, loginPassword)
-            .then((user) => {
+            .then(() => {
                 navigate("/yumms");
-                postUserID(user);
             })
             .catch((error) => {
                 console.log(error.code, error.message);
@@ -34,10 +29,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchForm }) => {
 
     const googleSignIn = () => {
         signInWithGoogle(auth) // Pass your auth instance here
-            .then((user) => {
-                // Successful sign-in, navigate to "/yumms"
+            .then(() => {
                 navigate("/yumms");
-                console.log(user);
             })
             .catch((error) => {
                 console.log(error.code, error.message);

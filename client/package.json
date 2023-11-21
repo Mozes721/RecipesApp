@@ -21,6 +21,7 @@
     "react-icons": "^4.11.0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
+    "redux": "^4.2.1",
     "styled-components": "^5.3.5",
     "switch": "^0.0.0",
     "typescript": "^4.7.4",
