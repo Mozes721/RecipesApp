@@ -5,7 +5,7 @@
       "dom",
       "dom.iterable",
       "esnext",
-      "ES2021.String",
+      "ES2021.String"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -22,6 +22,7 @@
     "jsx": "preserve"
   },
   "include": [
-    "src"
+    "src",
+    "src/types/global.d.ts"
   ]
 }

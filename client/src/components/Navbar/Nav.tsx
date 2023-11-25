@@ -1,18 +1,19 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import AuthenticationUserStates from '../../types/global.d'
 import Burger from "./SideBar";
 import {LuVegan} from "react-icons/lu";
+import {useSelector} from "react-redux";
 
 
 const Nav: React.FC<{}> = () => {
-  const [isActive, setisActive] = React.useState<boolean>(false); 
-  
+  const [isActive, setisActive] = React.useState<boolean>(false);
+    const email = useSelector((state: AuthenticationUserStates) => state.email);
 
   return (
     <>
             <nav className="navbar is-info hero-head">
                 <div className="container">
-                    
                      <div className="navbar-brand ">
                         <a
                             onClick={() => {
@@ -32,13 +33,22 @@ const Nav: React.FC<{}> = () => {
                         <Burger />
                         </div>
                     <div id="navbarMenu" className="navbar-menu">
+                        <div className="navbar-start">
+                            <span className="navbar-item">
+                                {email ? (
+                                    <p className="has-text-white">Welcome, {email}</p>
+                                ) : (
+                                    <p className="has-text-white">Not Logged In</p>
+                                )}
+                            </span>
+                        </div>
                         <div className="navbar-end">
                             <span className="navbar-item">
                                 <NavLink className="button is-white is-outlined" to="/">
                                     <span className="icon">
-                                        <i className="fa fa-home"></i>
+                                        <i className="fa-solid fa-home"></i>
                                     </span>
-                                    <span>Home</span>
+                                    <span>Login/Register</span>
                                 </NavLink>
                             </span>
                             <span className="navbar-item">
