@@ -12,7 +12,6 @@ import  Yumms from './pages/Yumms';
 
  const App: React.FC = () => {
      const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
-
      return (
       <Provider store={store}>
     <>
@@ -24,10 +23,9 @@ import  Yumms from './pages/Yumms';
                 <Route path="keto-paelo" element={<KetoPaelo />} />
                 <Route path="whole-popular" element={<WholePopular />} />
                 <Route path="vegan-vegetarian" element={<Veg />} />
-                <Route
-                    path="yumms"
-                    element={isAuthenticated ? <Yumms /> : null }
-                />
+                {isAuthenticated ?
+                    (<Route path="yumms" element={<Yumms /> } />)
+                    : null }
             </Routes>
         </section>
     </Router>

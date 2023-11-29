@@ -2,6 +2,7 @@ import React from "react";
 import { slide as Menu } from "react-burger-menu";
 import { NavLink } from "react-router-dom";
 import styled from 'styled-components';
+import {removeUser} from "../../hooks/removeUser";
 
 const StyledBurgerMenu = styled(Menu)`
   /* Position and sizing of burger button */
@@ -58,30 +59,41 @@ const StyledBurgerMenu = styled(Menu)`
   }
 `;
 
-const Burger: React.FC<{}> = () => {
-  return (
-    <StyledBurgerMenu>
-      <NavLink className="subtitle is-6 has-text-white" to="/">
-        Home
-      </NavLink>
+const Burger: React.FC<{
+    isAuthenticated: boolean | undefined;
+    toggleBurgerMenu: boolean;
+}> = ({ isAuthenticated, toggleBurgerMenu }) => {
+    return toggleBurgerMenu ? (
+        <StyledBurgerMenu>
+            <NavLink className="subtitle is-6 has-text-white" to="/">
+                Home
+            </NavLink>
 
-      <NavLink className="subtitle is-6 has-text-white" to="keto-paelo">
-        Keto&Paelo
-      </NavLink>
+            <NavLink className="subtitle is-6 has-text-white" to="keto-paelo">
+                Keto&Paelo
+            </NavLink>
 
-      <NavLink className="subtitle is-6 has-text-white" to="whole-popular">
-        Whole&Popular
-      </NavLink>
+            <NavLink className="subtitle is-6 has-text-white" to="whole-popular">
+                Whole&Popular
+            </NavLink>
 
-      <NavLink className="subtitle is-6 has-text-white" to="vegan-vegetarian">
-        Vegan&Vegetarian
-      </NavLink>
-
-      <NavLink className="subtitle is-6 has-text-white" to="yumms">
-        Yumms
-      </NavLink>
-    </StyledBurgerMenu>
-  );
+            <NavLink className="subtitle is-6 has-text-white" to="vegan-vegetarian">
+                Vegan&Vegetarian
+            </NavLink>
+            <span>
+        {isAuthenticated ? (
+            <div className="rows">
+                <NavLink className="subtitle is-6 has-text-white" to="yumms">
+                    Yumms
+                </NavLink>
+                <NavLink className="column ml-6 mt-6 is-6 has-text-danger" to="/" onClick={(e) => removeUser(e)}>
+                    <span>Exit</span>
+                </NavLink>
+            </div>
+        ) : null}
+      </span>
+        </StyledBurgerMenu>
+    ) : null;
 };
 
-export default Burger
+export default Burger;

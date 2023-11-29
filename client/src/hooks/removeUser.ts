@@ -1,7 +1,11 @@
-import store from '../store/store'
+import store from '../store/store';
 
-export function removeUser() {
-    store.dispatch({
-        type: 'LOGOUT',
+export function removeUser(event: React.MouseEvent<HTMLSpanElement, MouseEvent>): Promise<void> {
+    event.stopPropagation();
+    return new Promise((resolve) => {
+        store.dispatch({
+            type: 'LOGOUT',
+        });
+        resolve();
     });
 }
