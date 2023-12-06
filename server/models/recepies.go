@@ -1,27 +1,38 @@
 package models
 
 import (
-	"context"
-	"fmt"
-	"log"
-
 	"cloud.google.com/go/firestore"
+	"errors"
+	"fmt"
+	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
 )
 
+type User struct {
+	userID string
+}
 
+type Recepie struct {
+	User
+	Made   bool
+	Rating int
+	Title  string
+	Url    string
+}
 
-func ReadCollection(ctx context.Context, client *firestore.Client) *firestore.DocumentSnapshot {
+func (u *User) ReadUserCollection(c *gin.Context, client *firestore.Client) *firestore.DocumentSnapshot {
 	projectID := "my-recepies"
-	iter := client.Collection(projectID).Documents(ctx)
+	iter := client.Collection(projectID).Where("UserID", "==", u.userID).Documents(c)
 	var data *firestore.DocumentSnapshot
 	for {
 		doc, err := iter.Next()
-		if err == iterator.Done {
+		if errors.Is(err, iterator.Done) {
 			break
 		}
 		if err != nil {
-			log.Fatalf("Failed to iterate: %v", err)
+			c.JSON(404, gin.H{
+				"Message": "Failed to iterate",
+			})
 		}
 
 		data = doc
@@ -30,72 +41,85 @@ func ReadCollection(ctx context.Context, client *firestore.Client) *firestore.Do
 	return data
 }
 
-func AddRecepie(client *firestore.Client, r Recepie) error {
-	ok := checkCollection(client, r.Title)
+func (r *Recepie) AddRecepie(c *gin.Context, client *firestore.Client) error {
+	ok := r.checkCollection(client)
 	if ok {
-		fmt.Println("Apready exists")
-		return fmt.Errorf({FlashMsg: "Title already exists"})
+		c.JSON(200, gin.H{
+			"Message": "Recepie is already added to your list of Yumms.",
+		})
 	} else {
-		fmt.Println("Can add new recepie")
-		addCollectiosRecepie(context.Background(), client, r)
-		return HTTPError{FlashMsg: ""}
-	}
-}
-
-func checkCollection(client *firestore.Client, title string) bool {
-	ctx := context.Background()
-	var exists bool
-	iter := client.Collection("my-recepies").Where("Title", "==", title).Documents(ctx)
-	for {
-		doc, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
+		err := r.addCollectionRecepie(c, client)
 		if err != nil {
-			log.Fatalf("Failed to iterate: %v", err)
-		}
-		if doc.Data() != nil {
-			exists = true
-		} else {
-			exists = false
+			return err
 		}
 	}
-	return exists
 
+	return nil
 }
 
-func addCollectiosRecepie(ctx context.Context, client *firestore.Client, recepie helpers.Recepie) {
+func (r *Recepie) addCollectionRecepie(c *gin.Context, client *firestore.Client) error {
 	defer client.Close()
-	_, _, err := client.Collection("my-recepies").Add(ctx, map[string]interface{}{
-		"Made":   recepie.Made,
-		"Rating": recepie.Rating,
-		"Title":  recepie.Title,
-		"Url":    recepie.Url,
+	_, _, err := client.Collection("my-recepies").Add(c, map[string]interface{}{
+		"UserID": r.User.userID,
+		"Made":   r.Made,
+		"Rating": r.Rating,
+		"Title":  r.Title,
+		"Url":    r.Url,
 	})
 	if err != nil {
-		log.Fatalf("Failed adding alovelace: %v", err)
+		c.JSON(400, gin.H{
+			"Message": "Recepie is already added to your list of Yumms",
+		})
 	}
+
+	return nil
 }
 
-func UpdateRecepie(ctx context.Context, client *firestore.Client, recepie Recepie) error {
-	// First, check if the document with the specified title exists
-	exists := checkCollection(client, recepie.Title)
+func (r *Recepie) UpdateRecepie(c *gin.Context, client *firestore.Client) error {
+	exists := r.checkCollection(client)
 	if !exists {
 		return fmt.Errorf("failed updating document: %v", exists)
 	}
 
-	_, err := client.Collection("my-recepies").Doc(recepie.Title).Update(ctx, []firestore.Update{
+	_, err := client.Collection("my-recepies").Doc(r.User.userID+"_"+r.Title).Update(c, []firestore.Update{
 		{
 			Path:  "Made",
-			Value: recepie.Made,
+			Value: r.Made,
 		},
 		{
 			Path:  "Rating",
-			Value: recepie.Rating,
+			Value: r.Rating,
 		},
 	})
 	if err != nil {
-		return fmt.Errorf("Failed updating document: %v", err)
+		c.JSON(400, gin.H{
+			"Message": fmt.Errorf("Failed updating document: %v", err),
+		})
+	}
+
+	return nil
+}
+
+func (r *Recepie) DeleteUserRecepie(c *gin.Context, client *firestore.Client) *firestore.DocumentSnapshot {
+	projectID := "my-recepies"
+	docRef := client.Collection(projectID).Doc(r.User.userID + "_" + r.Title)
+	snapshot, err := docRef.Get(c)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"Message": fmt.Errorf("Failed updating document: %v", err),
+		})
+	}
+	if !snapshot.Exists() {
+		c.JSON(404, gin.H{
+			"Message": "Recipe not found",
+		})
+
+	}
+	_, err = docRef.Delete(c)
+	if err != nil {
+		c.JSON(300, gin.H{
+			"Message": fmt.Errorf("Failed to delete recipe: %v", err),
+		})
 	}
 
 	return nil

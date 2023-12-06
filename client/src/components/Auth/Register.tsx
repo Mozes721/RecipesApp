@@ -6,7 +6,7 @@ import {FcGoogle} from "react-icons/fc"
 import { auth } from "../../config/firebase-config";
 import { signIn } from "../../api/Auth/signin";
 import { useNavigate } from 'react-router-dom';
-import {signInWithGoogle} from "../../api/Auth/googleLogin";
+import { signInWithGoogle } from "../../api/Auth/googleLogin";
 
 interface RegisterFormProps {
     onSwitchForm: () => void;

@@ -1,6 +1,7 @@
 package helpers
 
-type RecepieHelper struct {
+type Recepie struct {
+	userID string
 	Made   bool
 	Rating int
 	Title  string

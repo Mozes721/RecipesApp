@@ -1,5 +1,5 @@
 import { createStore, Reducer } from 'redux';
-import AuthenticationUserStates from '../types/global.d';
+import { AuthenticationUserStates } from '../types/global';
 
 
 const initialState: AuthenticationUserStates = {

@@ -2,7 +2,7 @@ import React from 'react';
 import  Nav  from "./components/Navbar/Nav";
 import { Provider, useSelector } from 'react-redux';
 import store from './store/store';
-import AuthenticationUserStates from './types/global.d'
+import { AuthenticationUserStates } from './types/global'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import  LoginRegister  from './pages/LoginRegister';
 import  KetoPaelo  from './pages/KetoPaleo';

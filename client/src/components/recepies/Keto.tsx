@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
-
+import { AuthenticationUserStates } from '../../types/global'
+import { useSelector } from "react-redux";
+import { removeUser } from "../../hooks/removeUser";
 
 const Keto: React.FC = () => {
   const [keto, setKeto] = useState([] as any[]);
@@ -26,6 +28,10 @@ const getKeto = async () => {
   localStorage.setItem('keto', JSON.stringify(data.recipes));
   }
 };
+
+const addRecepie = (title: string, url: string) =>  {
+
+}
 
   return (
     <div>
@@ -57,7 +63,7 @@ const getKeto = async () => {
                         <a href={recepie.sourceUrl} target="_blank" rel="noreferrer">
                           <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
                         </a>
-                        <span className="button is-success column is-narrow" data-target="modal-image2">Add to Yumms</span>
+                        <span className="button is-success column is-narrow" data-target="modal-image2" onClick={() => addRecepie(recepie.title, recepie.sourceUrl)}>Add to Yumms</span>
                         </div>
                       </div>
                     </div>

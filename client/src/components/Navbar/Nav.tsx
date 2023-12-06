@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import AuthenticationUserStates from '../../types/global.d'
+import { AuthenticationUserStates } from '../../types/global'
 import Burger from "./SideBar";
 import {LuVegan} from "react-icons/lu";
 import {useSelector} from "react-redux";

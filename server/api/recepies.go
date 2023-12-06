@@ -2,31 +2,60 @@ package api
 
 import (
 	"cloud.google.com/go/firestore"
+	"github.com/RecepieApp/server/models"
 	"github.com/gin-gonic/gin"
 )
 
 func showRecepies(ctx *gin.Context, client *firestore.Client) {
-	ctx.JSON(200, gin.H{
-		"Message": "recepies",
-	})
+	user := models.User{}
+
+	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &user)
+	if err != nil {
+		ctx.JSON(400, gin.H{
+			"Message": "Unable to parse data",
+		})
+	}
+
+	user.ReadUserCollection(ctx, client)
 }
 
 func addRecepie(ctx *gin.Context, client *firestore.Client) {
-	ctx.JSON(200, gin.H{
-		"Message": "recepies add",
-	})
+	data := models.Recepie{}
+
+	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &data)
+	if err != nil {
+		ctx.JSON(400, gin.H{
+			"Message": "Unable to parse data",
+		})
+	}
+
+	data.AddRecepie(ctx, client)
 }
 
 func updateRecepie(ctx *gin.Context, client *firestore.Client) {
-	ctx.JSON(200, gin.H{
-		"Message": "recepies update",
-	})
+	data := models.Recepie{}
+
+	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &data)
+	if err != nil {
+		ctx.JSON(400, gin.H{
+			"Message": "Unable to parse data",
+		})
+	}
+
+	data.UpdateRecepie(ctx, client)
 
 }
 
 func deleteRecepie(ctx *gin.Context, client *firestore.Client) {
-	ctx.JSON(200, gin.H{
-		"Message": "recepies deleted",
-	})
+	data := models.Recepie{}
+
+	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &data)
+	if err != nil {
+		ctx.JSON(400, gin.H{
+			"Message": "Unable to parse data",
+		})
+	}
+
+	data.DeleteUserRecepie(ctx, client)
 
 }

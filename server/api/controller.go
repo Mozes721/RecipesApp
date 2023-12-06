@@ -16,11 +16,11 @@ func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client) 
 		showRecepies(c, client)
 	})
 
-	router.POST("/recipes", func(c *gin.Context) {
+	router.POST("/recipe", func(c *gin.Context) {
 		addRecepie(c, client)
 	})
 
-	router.PUT("/recipes/:id", func(c *gin.Context) {
+	router.PATCH("/recipe/:id", func(c *gin.Context) {
 		updateRecepie(c, client)
 	})
 	router.DELETE("/recipes/:id", func(c *gin.Context) {
