@@ -10,8 +10,8 @@ interface AuthenticationUserStates {
 }
 
 interface Recepie {
-    userID: string;
-    title: string;
+    userID?: string;
+    title?: string;
     url?: string;
     made?: boolean;
     rating?: number;

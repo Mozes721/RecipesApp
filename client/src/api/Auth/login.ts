@@ -7,12 +7,15 @@ export function login(authInstance: Auth, loginEmail: string, loginPassword: str
             .then((userCredential) => {
                 const userID = userCredential.user.uid;
                 const userEmail = userCredential.user.email;
-                const userToken = userCredential.user.refreshToken;
-                storeUser(userID, userEmail, userToken);
-                resolve();
-            })
-            .catch((error) => {
-                reject(error);
+                userCredential.user.getIdToken(true)
+                    .then(idToken => {
+                        storeUser(userID, userEmail, idToken);
+                        resolve();
+                    })
+                    .catch(error => {
+                        console.error('Error getting ID token:', error);
+                        reject(error)
+                    });
             });
     });
 }

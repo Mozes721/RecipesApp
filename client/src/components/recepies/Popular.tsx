@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
+import { AuthenticationUserStates, Recepie } from '../../types/global'
+import { useSelector } from "react-redux";
+import {addNewRecepie} from "../../api/Yumms/RecepieAdd";
 
 
 const Popular: React.FC = () => {
@@ -20,12 +23,26 @@ const getPopular = async () => {
   const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_URL}&number=9`)
   const data = await api.json();
 
-  console.log(data.recipes)
   setPopular(data.recipes);
 
   localStorage.setItem('popular', JSON.stringify(data.recipes));
   }
 };
+
+const userID = useSelector((state: AuthenticationUserStates) => state.userID);
+const authToken = useSelector((state: AuthenticationUserStates) => state.authToken);
+
+const addRecepie = (title: string, url: string) =>  {
+    const recepie: Recepie = {
+      userID: userID,
+      title: title,
+      url: url,
+      made: false,
+      rating: 0
+    };
+
+    addNewRecepie(recepie, authToken);
+}
 
   return (
     <div>
@@ -57,7 +74,7 @@ const getPopular = async () => {
                         <a href={recepie.sourceUrl} target="_blank" rel="noreferrer">
                           <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
                         </a>
-                        <span className="button is-success column is-narrow" data-target="modal-image2">Add to Yumms</span>
+                        <span className="button is-success column is-narrow" data-target="modal-image2" onClick={() => addRecepie(recepie.title, recepie.sourceUrl)}>Add to Yumms</span>
                         </div>
                       </div>
                     </div>

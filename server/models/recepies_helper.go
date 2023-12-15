@@ -13,7 +13,7 @@ import (
 func (r *Recepie) checkCollection(client *firestore.Client) bool {
 	ctx := context.Background()
 	var exists bool
-	iter := client.Collection("my-recepies").Where("UserID", "==", r.User.userID).Where("Title", "==", r.Title).Documents(ctx)
+	iter := client.Collection("my-recepies").Where("UserID", "==", r.User.UserID).Where("Title", "==", r.Title).Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if errors.Is(err, iterator.Done) {

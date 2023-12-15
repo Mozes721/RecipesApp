@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
+import { AuthenticationUserStates, Recepie } from '../../types/global'
+import { useSelector } from "react-redux";
+import {addNewRecepie} from "../../api/Yumms/RecepieAdd";
 
 const Vegan: React.FC = () => {
     const [vegan, setVegan] = useState([] as any[]);
@@ -18,11 +21,26 @@ const Vegan: React.FC = () => {
         } else {
             const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_URL}&number=9&tags=vegan`)
             const data = await api.json();
-            console.log(data.recipes)
             setVegan(data.recipes);
+
             localStorage.setItem('vegan', JSON.stringify(data.recipes));
         }
     };
+
+    const userID = useSelector((state: AuthenticationUserStates) => state.userID);
+    const authToken = useSelector((state: AuthenticationUserStates) => state.authToken);
+
+    const addRecepie = (title: string, url: string) =>  {
+        const recepie: Recepie = {
+            userID: userID,
+            title: title,
+            url: url,
+            made: false,
+            rating: 0
+        };
+
+        addNewRecepie(recepie, authToken);
+    }
 
     return (
         <div>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
-import { AuthenticationUserStates } from '../../types/global'
+import { AuthenticationUserStates, Recepie } from '../../types/global'
 import { useSelector } from "react-redux";
-import { removeUser } from "../../hooks/removeUser";
+import {addNewRecepie} from "../../api/Yumms/RecepieAdd";
 
 const Keto: React.FC = () => {
   const [keto, setKeto] = useState([] as any[]);
@@ -19,19 +19,29 @@ const getKeto = async () => {
   if(check) {
     setKeto(JSON.parse(check));
   } else {
-  const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_URL}&number=9&tags=ketogenic`)
-  const data = await api.json();
+    const api = await fetch(`https://api.spoonacular.com/recipes/random?apiKey=${process.env.REACT_APP_API_URL}&number=9&tags=ketogenic`)
+    const data = await api.json();
 
-  console.log(data.recipes)
-  setKeto(data.recipes);
+    setKeto(data.recipes);
 
-  localStorage.setItem('keto', JSON.stringify(data.recipes));
+    localStorage.setItem('keto', JSON.stringify(data.recipes));
+    }
+  };
+
+  const userID = useSelector((state: AuthenticationUserStates) => state.userID);
+  const authToken = useSelector((state: AuthenticationUserStates) => state.authToken);
+
+  const addRecepie = (title: string, url: string) =>  {
+    const recepie: Recepie = {
+      userID: userID,
+      title: title,
+      url: url,
+      made: false,
+      rating: 0
+    };
+
+    addNewRecepie(recepie, authToken);
   }
-};
-
-const addRecepie = (title: string, url: string) =>  {
-
-}
 
   return (
     <div>

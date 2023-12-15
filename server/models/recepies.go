@@ -9,7 +9,7 @@ import (
 )
 
 type User struct {
-	userID string
+	UserID string
 }
 
 type Recepie struct {
@@ -22,7 +22,7 @@ type Recepie struct {
 
 func (u *User) ReadUserCollection(c *gin.Context, client *firestore.Client) *firestore.DocumentSnapshot {
 	projectID := "my-recepies"
-	iter := client.Collection(projectID).Where("UserID", "==", u.userID).Documents(c)
+	iter := client.Collection(projectID).Where("UserID", "==", u.UserID).Documents(c)
 	var data *firestore.DocumentSnapshot
 	for {
 		doc, err := iter.Next()
@@ -60,7 +60,7 @@ func (r *Recepie) AddRecepie(c *gin.Context, client *firestore.Client) error {
 func (r *Recepie) addCollectionRecepie(c *gin.Context, client *firestore.Client) error {
 	defer client.Close()
 	_, _, err := client.Collection("my-recepies").Add(c, map[string]interface{}{
-		"UserID": r.User.userID,
+		"UserID": r.User.UserID,
 		"Made":   r.Made,
 		"Rating": r.Rating,
 		"Title":  r.Title,
@@ -81,7 +81,7 @@ func (r *Recepie) UpdateRecepie(c *gin.Context, client *firestore.Client) error 
 		return fmt.Errorf("failed updating document: %v", exists)
 	}
 
-	_, err := client.Collection("my-recepies").Doc(r.User.userID+"_"+r.Title).Update(c, []firestore.Update{
+	_, err := client.Collection("my-recepies").Doc(r.User.UserID+"_"+r.Title).Update(c, []firestore.Update{
 		{
 			Path:  "Made",
 			Value: r.Made,
@@ -102,7 +102,7 @@ func (r *Recepie) UpdateRecepie(c *gin.Context, client *firestore.Client) error 
 
 func (r *Recepie) DeleteUserRecepie(c *gin.Context, client *firestore.Client) *firestore.DocumentSnapshot {
 	projectID := "my-recepies"
-	docRef := client.Collection(projectID).Doc(r.User.userID + "_" + r.Title)
+	docRef := client.Collection(projectID).Doc(r.User.UserID + "_" + r.Title)
 	snapshot, err := docRef.Get(c)
 	if err != nil {
 		c.JSON(500, gin.H{

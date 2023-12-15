@@ -11,30 +11,24 @@ import (
 	"time"
 )
 
-const (
-	authorizationHeader = "Authorization"
-	valName             = "FIREBASE_ID_TOKEN"
-)
-
 func AuthJWT(client *auth.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		startTime := time.Now()
-
-		authHeader := c.Request.Header.Get(authorizationHeader)
-		log.Println("authHeader", authHeader)
+		authHeader := c.Request.Header.Get("Authorization")
 		token := strings.Replace(authHeader, "Bearer ", "", 1)
-		idToken, err := client.VerifyIDToken(c, token)
+
+		idToken, err := client.VerifyIDTokenAndCheckRevoked(c, token)
 		if err != nil {
+			log.Printf("Token verification failed: %v", err)
+
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"code":    http.StatusUnauthorized,
-				"message": http.StatusText(http.StatusUnauthorized),
+				"message": "Unauthorized",
 			})
+			c.Abort()
 			return
 		}
 
-		log.Println("Auth time:", time.Since(startTime))
-
-		c.Set(valName, idToken)
+		c.Set("FIREBASE_ID_TOKEN", idToken.UID)
 		c.Next()
 	}
 }
