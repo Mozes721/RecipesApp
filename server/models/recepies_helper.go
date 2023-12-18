@@ -28,6 +28,7 @@ func (r *Recepie) checkCollection(client *firestore.Client) bool {
 			exists = false
 		}
 	}
+
 	return exists
 
 }

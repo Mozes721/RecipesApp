@@ -76,6 +76,7 @@ func (r *Recepie) addCollectionRecepie(c *gin.Context, client *firestore.Client)
 }
 
 func (r *Recepie) UpdateRecepie(c *gin.Context, client *firestore.Client) error {
+	defer client.Close()
 	exists := r.checkCollection(client)
 	if !exists {
 		return fmt.Errorf("failed updating document: %v", exists)

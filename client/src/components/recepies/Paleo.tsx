@@ -67,10 +67,10 @@ const getPaleo = async () => {
                       <img src={recepie.image} alt={recepie.title} className="modal-button" data-target="modal-image2" />
                     </figure>
                   </div>
-                    <div className="card-content ">
+                    <div className="card-content">
                       <div className="content">
                         <h5>{recepie.title}</h5>
-                        <div className="columns is-mobile  is-centered is-one-quarter">
+                        <div className="columns buttons is-mobile  is-centered is-one-quarter">
                         <a href={recepie.sourceUrl} target="_blank" rel="noreferrer">
                           <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
                         </a>

@@ -8,7 +8,6 @@ export function addNewRecepie(recipe: Recepie, token: string | undefined): Promi
     if (!serverPostUrl) {
         return Promise.reject(new Error('REACT_APP_SERVER_POST is not defined'));
     }
-    console.log(token)
 
     return axios.post(serverPostUrl, recipe, { headers:  {Authorization: `Bearer ${token}` } })
         .then(() => {})

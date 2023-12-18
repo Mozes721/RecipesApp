@@ -4,6 +4,7 @@ import "@splidejs/splide/dist/css/splide.min.css";
 import { AuthenticationUserStates, Recepie } from '../../types/global'
 import { useSelector } from "react-redux";
 import {addNewRecepie} from "../../api/Yumms/RecepieAdd";
+import { toastNotification } from "../toast"
 
 const Keto: React.FC = () => {
   const [keto, setKeto] = useState([] as any[]);
@@ -40,6 +41,8 @@ const getKeto = async () => {
       rating: 0
     };
 
+    toastNotification('Added recipe to your Yumms', 'is-success');
+
     addNewRecepie(recepie, authToken);
   }
 
@@ -66,10 +69,10 @@ const getKeto = async () => {
                       <img src={recepie.image} alt={recepie.title} className="modal-button" data-target="modal-image2" />
                     </figure>
                   </div>
-                    <div className="card-content ">
+                    <div className="card-content">
                       <div className="content">
                         <h5>{recepie.title}</h5>
-                        <div className="columns is-mobile  is-centered is-one-quarter">
+                        <div className="columns buttons is-mobile  is-centered is-one-quarter">
                         <a href={recepie.sourceUrl} target="_blank" rel="noreferrer">
                           <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
                         </a>

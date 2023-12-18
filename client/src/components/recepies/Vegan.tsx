@@ -64,10 +64,10 @@ const Vegan: React.FC = () => {
                                             <img src={recipe.image} alt={recipe.title} className="modal-button" data-target="modal-image2" />
                                         </figure>
                                     </div>
-                                    <div className="card-content ">
+                                    <div className="card-content">
                                         <div className="content">
                                             <h5>{recipe.title}</h5>
-                                            <div className="columns is-mobile  is-centered is-one-quarter">
+                                            <div className="columns buttons is-mobile  is-centered is-one-quarter">
                                                 <a href={recipe.sourceUrl} target="_blank" rel="noreferrer">
                                                     <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
                                                 </a>
