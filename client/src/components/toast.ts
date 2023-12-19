@@ -1,7 +1,5 @@
 // Import the toast function
 import * as bulmaToast from 'bulma-toast'
-import {toast} from "bulma-toast";
-import {type} from "os";
 
 
 export const toastNotification = (message: string, type: any) => {
