@@ -56,6 +56,6 @@
     "@types/react-burger-menu": "^2.8.3",
     "@types/styled-components": "^5.1.26",
     "react-modal": "^3.15.1",
-    "react-scripts": "^3.0.1"
+    "react-scripts": "^4.0.0"
   }
 }
