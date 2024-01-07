@@ -25,8 +25,7 @@
     "react-router-dom": "^6.3.0",
     "redux": "^4.2.1",
     "styled-components": "^5.3.5",
-    "switch": "^0.0.0",
-    "typescript": "^3.4.0",
+    "typescript": "^4.5.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
