@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import RegisterForm from '../components/Auth/Register'; 
 import LoginForm from '../components/Auth/Login';
-const HomePage: React.FC = () => {
+const LoginRegister: React.FC = () => {
     const [isRegister, setRegister] = React.useState(false);
 
     const toggleForm = () => {
@@ -35,4 +35,4 @@ const HomePage: React.FC = () => {
       );
     };
 
-export default HomePage;
+export default LoginRegister;

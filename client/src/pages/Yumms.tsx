@@ -1,6 +1,6 @@
 import React from 'react';
 
-const YummsPage: React.FC = () => {
-  return <h1>Yumms  Page</h1>
+const Yumms: React.FC = () => {
+  return <h1>Yumms</h1>
 }
-export default YummsPage;
+export default Yumms;

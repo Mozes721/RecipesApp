@@ -3,7 +3,7 @@ import Vegan from '../components/recepies/Vegan'
 import Vegetarian from '../components/recepies/Vegetarian'
 
 
-const VegPage: React.FC = () => {
+const Veg: React.FC = () => {
     return (
         <React.Fragment>
             <Vegan />
@@ -11,4 +11,4 @@ const VegPage: React.FC = () => {
         </React.Fragment>
     )
 }
-export default VegPage;
+export default Veg;

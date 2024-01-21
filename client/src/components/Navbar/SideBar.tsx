@@ -65,9 +65,15 @@ const Burger: React.FC<{
 }> = ({ isAuthenticated, toggleBurgerMenu }) => {
     return toggleBurgerMenu ? (
         <StyledBurgerMenu>
-            <NavLink className="subtitle is-6 has-text-white" to="/">
-                Home
+          <NavLink className="subtitle is-6 has-text-white" to="/">
+                About Me
             </NavLink>
+            {isAuthenticated ?
+              null :
+              (<NavLink className="subtitle is-6 has-text-white" to="/login-register">
+                  Login/Register
+              </NavLink>)
+              }
 
             <NavLink className="subtitle is-6 has-text-white" to="keto-paelo">
                 Keto&Paelo

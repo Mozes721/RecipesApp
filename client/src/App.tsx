@@ -4,6 +4,7 @@ import { Provider, useSelector } from 'react-redux';
 import store from './store/store';
 import { AuthenticationUserStates } from './types/global'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import  Home from './pages/Index';
 import  LoginRegister  from './pages/LoginRegister';
 import  KetoPaelo  from './pages/KetoPaleo';
 import  WholePopular from './pages/WholePopular';
@@ -19,7 +20,11 @@ import  Yumms from './pages/Yumms';
         <Nav />
         <section className="hero is-fullheight">
             <Routes>
-                <Route path="/" element={<LoginRegister />} />
+                <Route path="/" element={<Home />} />
+                {isAuthenticated ? 
+                    null : 
+                    (<Route path="/login-register" element={<LoginRegister />} />)
+                }
                 <Route path="keto-paelo" element={<KetoPaelo />} />
                 <Route path="whole-popular" element={<WholePopular />} />
                 <Route path="vegan-vegetarian" element={<Veg />} />

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Keto from '../components/recepies/Keto';
 import Paelo from '../components/recepies/Paleo';
 
-const KetoPaeloPage: React.FC = () => {
+const KetoPaelo: React.FC = () => {
    return (
        <React.Fragment>
          <Keto />
@@ -10,4 +10,4 @@ const KetoPaeloPage: React.FC = () => {
        </React.Fragment>
    )
 }
-export default KetoPaeloPage;
+export default KetoPaelo;
