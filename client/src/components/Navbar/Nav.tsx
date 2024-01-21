@@ -35,7 +35,7 @@ const Nav: React.FC = () => {
                         {isAuthenticated && windowWidth > 1022 && (
                             <NavLink
                                 className="button is-white is-outlined ml-2"
-                                to="/"
+                                to="/login-register"
                                 onClick={(e) => removeUser(e)}
                             >
                                 <span>Exit</span>
@@ -68,7 +68,15 @@ const Nav: React.FC = () => {
                     <div id="navbarMenu" className="navbar-menu">
                         <div className="navbar-end">
                             <span className="navbar-item">
-                                <NavLink className="button is-white is-outlined" to="/">
+                            <NavLink className="button is-white is-outlined" to="/">
+                                    <span className="icon">
+                                        <i className="fa-solid fa fa-file-text-o"></i>
+                                    </span>
+                                    <span>About Me</span>
+                                </NavLink>
+                            </span>
+                            <span className="navbar-item">
+                                <NavLink className="button is-white is-outlined" to="/login-register">
                                     <span className="icon">
                                         <i className="fa-solid fa-door-open"></i>
                                     </span>
