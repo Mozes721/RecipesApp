@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-
+	"log"  // Import the log package
 	"github.com/RecepieApp/server/app"
 	"github.com/RecepieApp/server/runtime"
 )
@@ -14,13 +14,12 @@ func main() {
 
 	a := app.Application{}
 
-	err := a.LoadConfigurations()
-	if err != nil {
-		panic(err)
-	}
+	if err := a.LoadConfigurations(); err != nil {
+        log.Fatalf("Failed to load configurations: %v", err)
+    }
 
-	err = runtime.Start(&a)
-	if err != nil {
-		panic(err)
-	}
+    if err := runtime.Start(&a); err != nil {
+        log.Fatalf("Failed to start the application: %v", err)
+    }
 }
+

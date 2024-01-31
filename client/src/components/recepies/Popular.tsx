@@ -4,10 +4,12 @@ import "@splidejs/splide/dist/css/splide.min.css";
 import { AuthenticationUserStates, Recepie } from '../../types/global'
 import { useSelector } from "react-redux";
 import {addNewRecepie} from "../../api/Yumms/RecepieAdd";
+import { toastNotification } from "../toast"
 
 
 const Popular: React.FC = () => {
   const [popular, setPopular] = useState([] as any[]);
+
 
   useEffect(() => {
     getPopular();
@@ -31,8 +33,9 @@ const getPopular = async () => {
 
 const userID = useSelector((state: AuthenticationUserStates) => state.userID);
 const authToken = useSelector((state: AuthenticationUserStates) => state.authToken);
+const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
 
-const addRecepie = (title: string, url: string) =>  {
+const addRecepie = async (title: string, url: string) =>  {
     const recepie: Recepie = {
       userID: userID,
       title: title,
@@ -41,7 +44,10 @@ const addRecepie = (title: string, url: string) =>  {
       rating: 0
     };
 
-    addNewRecepie(recepie, authToken);
+    const response = await addNewRecepie(recepie, authToken);
+    const typeClass = response.status === 200 ? 'is-success' : 'is-warning';
+
+    toastNotification(response.message, typeClass);
 }
 
   return (
@@ -74,7 +80,13 @@ const addRecepie = (title: string, url: string) =>  {
                         <a href={recepie.sourceUrl} target="_blank" rel="noreferrer">
                           <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
                         </a>
-                        <span className="button is-success column is-narrow" data-target="modal-image2" onClick={() => addRecepie(recepie.title, recepie.sourceUrl)}>Add to Yumms</span>
+                        {isAuthenticated ? (
+                          <span className="button is-success column is-narrow" data-target="modal-image2" 
+                          onClick={() => addRecepie(recepie.title, recepie.sourceUrl)}>Add to Yumms</span>
+                          ) : (
+                            <span className="button is-light column is-narrow" data-target="modal-image2" >Add to Yumms</span>
+                          )
+                        }
                         </div>
                       </div>
                     </div>

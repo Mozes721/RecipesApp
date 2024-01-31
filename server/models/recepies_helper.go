@@ -6,13 +6,11 @@ import (
 	"encoding/json"
 	"errors"
 	"google.golang.org/api/iterator"
-	"io"
-	"log"
+	"io"	
 )
 
 func (r *Recepie) checkCollection(client *firestore.Client) bool {
 	ctx := context.Background()
-	var exists bool
 	iter := client.Collection("my-recepies").Where("UserID", "==", r.User.UserID).Where("Title", "==", r.Title).Documents(ctx)
 	for {
 		doc, err := iter.Next()
@@ -20,16 +18,15 @@ func (r *Recepie) checkCollection(client *firestore.Client) bool {
 			break
 		}
 		if err != nil {
-			log.Fatalf("Failed to iterate: %v", err)
+			return true
 		}
-		if doc.Data() != nil {
-			exists = true
-		} else {
-			exists = false
+
+		if doc.Exists() {
+			return true
 		}
 	}
 
-	return exists
+	return false
 
 }
 

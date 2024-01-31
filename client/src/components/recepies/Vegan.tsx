@@ -4,6 +4,7 @@ import "@splidejs/splide/dist/css/splide.min.css";
 import { AuthenticationUserStates, Recepie } from '../../types/global'
 import { useSelector } from "react-redux";
 import {addNewRecepie} from "../../api/Yumms/RecepieAdd";
+import { toastNotification } from "../toast"
 
 const Vegan: React.FC = () => {
     const [vegan, setVegan] = useState([] as any[]);
@@ -29,8 +30,9 @@ const Vegan: React.FC = () => {
 
     const userID = useSelector((state: AuthenticationUserStates) => state.userID);
     const authToken = useSelector((state: AuthenticationUserStates) => state.authToken);
+    const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
 
-    const addRecepie = (title: string, url: string) =>  {
+    const addRecepie = async (title: string, url: string) =>  {
         const recepie: Recepie = {
             userID: userID,
             title: title,
@@ -39,7 +41,10 @@ const Vegan: React.FC = () => {
             rating: 0
         };
 
-        addNewRecepie(recepie, authToken);
+    const response = await addNewRecepie(recepie, authToken);
+    const typeClass = response.status === 200 ? 'is-success' : 'is-warning';
+
+    toastNotification(response.message, typeClass);
     }
 
     return (
@@ -55,23 +60,29 @@ const Vegan: React.FC = () => {
                     perPage:3,
                     arrows:false,
                 }}>
-                    {vegan.map((recipe) => {
+                    {vegan.map((recepie) => {
                         return(
                             <SplideSlide>
                                 <div className="card is-shady column is-10">
                                     <div className="card-image">
                                         <figure className="image is-3by2">
-                                            <img src={recipe.image} alt={recipe.title} className="modal-button" data-target="modal-image2" />
+                                            <img src={recepie.image} alt={recepie.title} className="modal-button" data-target="modal-image2" />
                                         </figure>
                                     </div>
                                     <div className="card-content">
                                         <div className="content">
-                                            <h5>{recipe.title}</h5>
+                                            <h5>{recepie.title}</h5>
                                             <div className="columns buttons is-mobile  is-centered is-one-quarter">
-                                                <a href={recipe.sourceUrl} target="_blank" rel="noreferrer">
+                                                <a href={recepie.sourceUrl} target="_blank" rel="noreferrer">
                                                     <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
                                                 </a>
-                                                <span className="button is-success column is-narrow" data-target="modal-image2">Add to Yumms</span>
+                                               {isAuthenticated ? (
+                                                <span className="button is-success column is-narrow" data-target="modal-image2" 
+                                                onClick={() => addRecepie(recepie.title, recepie.sourceUrl)}>Add to Yumms</span>
+                                                ) : (
+                                                    <span className="button is-light column is-narrow" data-target="modal-image2" >Add to Yumms</span>
+                                                )
+                                                } 
                                             </div>
                                         </div>
                                     </div>

@@ -41,23 +41,25 @@ func (u *User) ReadUserCollection(c *gin.Context, client *firestore.Client) *fir
 	return data
 }
 
-func (r *Recepie) AddRecepie(c *gin.Context, client *firestore.Client) error {
+func (r *Recepie) AddRecepie(c *gin.Context, client *firestore.Client) (string, int) {
+	var (
+		message string
+		status int
+	)	
+
 	ok := r.checkCollection(client)
 	if ok {
-		c.JSON(200, gin.H{
-			"Message": "Recepie is already added to your list of Yumms.",
-		})
+		message = "Recepie is already added to your list of Yumms."
+		status = 409
 	} else {
-		err := r.addCollectionRecepie(c, client)
-		if err != nil {
-			return err
-		}
+		message = r.addCollectionRecepie(c, client)
+		status = 200
 	}
 
-	return nil
+	return message, status
 }
 
-func (r *Recepie) addCollectionRecepie(c *gin.Context, client *firestore.Client) error {
+func (r *Recepie) addCollectionRecepie(c *gin.Context, client *firestore.Client) string {
 	defer client.Close()
 	_, _, err := client.Collection("my-recepies").Add(c, map[string]interface{}{
 		"UserID": r.User.UserID,
@@ -67,12 +69,9 @@ func (r *Recepie) addCollectionRecepie(c *gin.Context, client *firestore.Client)
 		"Url":    r.Url,
 	})
 	if err != nil {
-		c.JSON(400, gin.H{
-			"Message": "Recepie is already added to your list of Yumms",
-		})
+		return "Recepie succesfully added to Yumms."
 	}
-
-	return nil
+	return "Issue with adding to Yumms."
 }
 
 func (r *Recepie) UpdateRecepie(c *gin.Context, client *firestore.Client) error {

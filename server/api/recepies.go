@@ -12,7 +12,7 @@ func showRecepies(ctx *gin.Context, client *firestore.Client) {
 	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &user)
 	if err != nil {
 		ctx.JSON(400, gin.H{
-			"Message": "Unable to parse data",
+			"message": "Unable to parse data",
 		})
 	}
 
@@ -25,11 +25,16 @@ func addRecepie(ctx *gin.Context, client *firestore.Client) {
 	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &data)
 	if err != nil {
 		ctx.JSON(400, gin.H{
-			"Message": "Unable to parse data",
+			"message": "Unable to parse data",
 		})
 	}
 
-	data.AddRecepie(ctx, client)
+	msg, status := data.AddRecepie(ctx, client)
+
+	ctx.JSON(status, gin.H{
+			"message": msg,
+		})
+	
 }
 
 func updateRecepie(ctx *gin.Context, client *firestore.Client) {
@@ -38,7 +43,7 @@ func updateRecepie(ctx *gin.Context, client *firestore.Client) {
 	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &data)
 	if err != nil {
 		ctx.JSON(400, gin.H{
-			"Message": "Unable to parse data",
+			"message": "Unable to parse data",
 		})
 	}
 

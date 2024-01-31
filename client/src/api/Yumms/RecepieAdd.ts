@@ -1,8 +1,7 @@
 import { Recepie } from '../../types/global';
-import { GoogleAuthProvider, signInWithPopup, Auth } from 'firebase/auth';
 import axios from 'axios';
 
-export function addNewRecepie(recipe: Recepie, token: string | undefined): Promise<void> {
+export function addNewRecepie(recipe: Recepie, token: string | undefined): Promise<{ status: number, message: string }> {
     const serverPostUrl = process.env.REACT_APP_SERVER_POST;
 
     if (!serverPostUrl) {
@@ -10,8 +9,13 @@ export function addNewRecepie(recipe: Recepie, token: string | undefined): Promi
     }
 
     return axios.post(serverPostUrl, recipe, { headers:  {Authorization: `Bearer ${token}` } })
-        .then(() => {})
+        .then((response) => {
+            console.log(response)
+            return {status: response.status, message: response.data.message}
+         
+        })
         .catch((error) => {
-            throw error;
+            console.log(error)
+            return { status: error.response.status, message: error.response.data.message };
         });
 }

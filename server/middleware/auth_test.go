@@ -39,7 +39,6 @@ func TestLogin(t *testing.T) {
 }
 
 func (u User) createUser(ctx context.Context, client *auth.Client) (*auth.UserRecord, error) {
-	// [START create_user_golang]
 	params := (&auth.UserToCreate{}).
 		Email(u.Email).
 		PhoneNumber(u.Phone).

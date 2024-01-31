@@ -63,7 +63,10 @@ const Nav: React.FC = () => {
 
                     </a>
                 </div>
-                <Burger isAuthenticated={isAuthenticated} toggleBurgerMenu={isActive} />
+                { windowWidth > 1022 && (
+                    <Burger isAuthenticated={isAuthenticated}   toggleBurgerMenu={isActive} />
+                    )
+                }
             </div>
                     <div id="navbarMenu" className="navbar-menu">
                         <div className="navbar-end">
@@ -76,12 +79,16 @@ const Nav: React.FC = () => {
                                 </NavLink>
                             </span>
                             <span className="navbar-item">
-                                <NavLink className="button is-white is-outlined" to="/login-register">
-                                    <span className="icon">
-                                        <i className="fa-solid fa-door-open"></i>
-                                    </span>
-                                    <span>Login/Register</span>
-                                </NavLink>
+                                {isAuthenticated ? (
+                                    null 
+                                ) :
+                                    <NavLink className="button is-white is-outlined" to="/login-register">
+                                        <span className="icon">
+                                            <i className="fa-solid fa-door-open"></i>
+                                        </span>
+                                        <span>Login/Register</span>
+                                    </NavLink>
+                                    }
                             </span>
                             <span className="navbar-item">
                                 <NavLink className="button is-white is-outlined" to="keto-paelo">

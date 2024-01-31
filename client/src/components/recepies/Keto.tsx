@@ -31,20 +31,23 @@ const getKeto = async () => {
 
   const userID = useSelector((state: AuthenticationUserStates) => state.userID);
   const authToken = useSelector((state: AuthenticationUserStates) => state.authToken);
+  const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
 
-  const addRecepie = (title: string, url: string) =>  {
+  const addRecepie = async (title: string, url: string) => {
     const recepie: Recepie = {
-      userID: userID,
-      title: title,
-      url: url,
-      made: false,
-      rating: 0
+        userID: userID,
+        title: title,
+        url: url,
+        made: false,
+        rating: 0
     };
 
-    toastNotification('Added recipe to your Yumms', 'is-success');
+    const response = await addNewRecepie(recepie, authToken);
+    const typeClass = response.status === 200 ? 'is-success' : 'is-warning';
 
-    addNewRecepie(recepie, authToken);
-  }
+    toastNotification(response.message, typeClass);
+      
+  };
 
   return (
     <div>
@@ -76,7 +79,14 @@ const getKeto = async () => {
                         <a href={recepie.sourceUrl} target="_blank" rel="noreferrer">
                           <span className="button is-info modal-button column is-narrow" data-target="modal-image2">Link</span>
                         </a>
-                        <span className="button is-success column is-narrow" data-target="modal-image2" onClick={() => addRecepie(recepie.title, recepie.sourceUrl)}>Add to Yumms</span>
+                        {isAuthenticated ? (
+                            <span className="button is-success column is-narrow" data-target="modal-image2" 
+                            onClick={() => addRecepie(recepie.title, recepie.sourceUrl)}>Add to Yumms</span>
+                            ) : (
+                              <span className="button is-light column is-narrow" data-target="modal-image2" >Add to Yumms</span>
+                            )
+                        }
+    
                         </div>
                       </div>
                     </div>
