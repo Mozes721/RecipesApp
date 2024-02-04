@@ -1,6 +1,11 @@
 import React from 'react';
+import Index from '../components/Yumms/Index'
 
 const Yumms: React.FC = () => {
-  return <h1>Yumms</h1>
+  return (
+        <React.Fragment>
+            <Index />
+        </React.Fragment>
+    )
 }
 export default Yumms;

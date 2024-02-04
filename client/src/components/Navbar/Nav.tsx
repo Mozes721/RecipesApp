@@ -47,26 +47,26 @@ const Nav: React.FC = () => {
                         <p className="has-text-white">Not Logged In</p>
                     </div>
                 )}
-
-                <div className="navbar-brand is-clickable">
+               {windowWidth > 1022 && (
+                <>
+                    <div className="navbar-brand is-clickable">
                     <a
-                        onClick={(e) =>  setIsActive(!isActive)}
+                        onClick={(e) => setIsActive(!isActive)}
                         role="button"
                         className={`navbar-burger burger`}
                         aria-label="menu"
                         aria-expanded="false"
                         data-target="navbarMenu"
                     >
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
                     </a>
-                </div>
-                { windowWidth > 1022 && (
-                    <Burger isAuthenticated={isAuthenticated}   toggleBurgerMenu={isActive} />
-                    )
-                }
+                    </div>
+                    <Burger isAuthenticated={isAuthenticated} toggleBurgerMenu={isActive} />
+                </>
+                )}
+
             </div>
                     <div id="navbarMenu" className="navbar-menu">
                         <div className="navbar-end">

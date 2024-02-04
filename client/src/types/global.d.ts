@@ -17,5 +17,8 @@ interface Recepie {
     rating?: number;
 }
 
+interface Recepies {
+    recepies: Recepie[];
+}
 
-export { User, AuthenticationUserStates, Recepie };
+export { User, AuthenticationUserStates, Recepie, Recepies };

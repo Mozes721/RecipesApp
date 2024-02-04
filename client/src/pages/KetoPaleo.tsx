@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Keto from '../components/recepies/Keto';
-import Paelo from '../components/recepies/Paleo';
+import Keto from '../components/Recepies/Keto';
+import Paelo from '../components/Recepies/Paleo';
 
 const KetoPaelo: React.FC = () => {
    return (
