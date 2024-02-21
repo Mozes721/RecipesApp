@@ -2,10 +2,12 @@ package models
 
 import (
 	"cloud.google.com/go/firestore"
+	"context"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
+	"time"
 )
 
 type User struct {
@@ -41,27 +43,32 @@ func (u *User) ReadUserCollection(c *gin.Context, client *firestore.Client) *fir
 	return data
 }
 
-func (r *Recepie) AddRecepie(c *gin.Context, client *firestore.Client) (string, int) {
+func (r *Recepie) AddRecepie(client *firestore.Client) (string, int) {
 	var (
 		message string
-		status int
-	)	
-
-	ok := r.checkCollection(client)
-	if ok {
+		status  int
+	)
+	exists := r.checkCollection(client)
+	fmt.Println(exists)
+	fmt.Println(r.Url, r.Title, r.UserID)
+	if exists {
 		message = "Recepie is already added to your list of Yumms."
 		status = 409
 	} else {
-		message = r.addCollectionRecepie(c, client)
+		message = r.addCollectionRecepie(client)
 		status = 200
 	}
 
 	return message, status
 }
 
-func (r *Recepie) addCollectionRecepie(c *gin.Context, client *firestore.Client) string {
-	defer client.Close()
-	_, _, err := client.Collection("my-recepies").Add(c, map[string]interface{}{
+func (r *Recepie) addCollectionRecepie(client *firestore.Client) string {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	message := "Recepie successfully added to Yumms."
+
+	_, _, err := client.Collection("my-recepies").Add(ctx, map[string]interface{}{
 		"UserID": r.User.UserID,
 		"Made":   r.Made,
 		"Rating": r.Rating,
@@ -69,9 +76,10 @@ func (r *Recepie) addCollectionRecepie(c *gin.Context, client *firestore.Client)
 		"Url":    r.Url,
 	})
 	if err != nil {
-		return "Recepie succesfully added to Yumms."
+		message = "Issue with adding to your collection"
 	}
-	return "Issue with adding to Yumms."
+
+	return message
 }
 
 func (r *Recepie) UpdateRecepie(c *gin.Context, client *firestore.Client) error {

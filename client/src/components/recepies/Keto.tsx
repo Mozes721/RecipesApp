@@ -46,7 +46,6 @@ const getKeto = async () => {
     const typeClass = response.status === 200 ? 'is-success' : 'is-warning';
 
     toastNotification(response.message, typeClass);
-      
   };
 
   return (

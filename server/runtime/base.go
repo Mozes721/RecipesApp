@@ -9,7 +9,7 @@ import (
 )
 
 func Start(a *app.Application) error {
-	router := gin.Default()
+	router := gin.New()
 
 	router.Use(cors.New(md.CORSMiddleware()))
 

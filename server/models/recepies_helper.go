@@ -6,28 +6,27 @@ import (
 	"encoding/json"
 	"errors"
 	"google.golang.org/api/iterator"
-	"io"	
+	"io"
 )
 
 func (r *Recepie) checkCollection(client *firestore.Client) bool {
 	ctx := context.Background()
 	iter := client.Collection("my-recepies").Where("UserID", "==", r.User.UserID).Where("Title", "==", r.Title).Documents(ctx)
+	defer iter.Stop()
+
 	for {
 		doc, err := iter.Next()
 		if errors.Is(err, iterator.Done) {
 			break
 		}
-		if err != nil {
+
+		if doc != nil && doc.Exists() {
 			return true
 		}
 
-		if doc.Exists() {
-			return true
-		}
 	}
 
 	return false
-
 }
 
 func UnmarshallRequestBodyToAPIData(requestBody io.ReadCloser, respStruct interface{}) error {

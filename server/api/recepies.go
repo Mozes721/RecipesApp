@@ -6,14 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func showRecepies(ctx *gin.Context, client *firestore.Client) {
-	user := models.User{}
+func showRecepies(ctx *gin.Context, client *firestore.Client, userID string) {
 
-	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &user)
-	if err != nil {
-		ctx.JSON(400, gin.H{
-			"message": "Unable to parse data",
-		})
+	user := models.User{
+		UserID: userID,
 	}
 
 	user.ReadUserCollection(ctx, client)
@@ -29,12 +25,12 @@ func addRecepie(ctx *gin.Context, client *firestore.Client) {
 		})
 	}
 
-	msg, status := data.AddRecepie(ctx, client)
+	msg, status := data.AddRecepie(client)
 
 	ctx.JSON(status, gin.H{
-			"message": msg,
-		})
-	
+		"message": msg,
+	})
+
 }
 
 func updateRecepie(ctx *gin.Context, client *firestore.Client) {
