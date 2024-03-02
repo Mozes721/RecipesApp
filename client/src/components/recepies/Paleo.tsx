@@ -33,14 +33,15 @@ const getPaleo = async () => {
   const authToken = useSelector((state: AuthenticationUserStates) => state.authToken);
   const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
 
-  const addRecepie = async (title: string, url: string) =>  {
-      const recepie: Recepie = {
-        userID: userID,
-        title: title,
-        url: url,
-        made: false,
-        rating: 0
-      };
+  const addRecepie = async (title: string, url: string, image: string) => {
+    const recepie: Recepie = {
+      userID: userID,
+      title: title,
+      url: url,
+      imageUrl: image,
+      made: false,
+      rating: 0
+    };
 
     const response = await addNewRecepie(recepie, authToken);
     const typeClass = response.status === 200 ? 'is-success' : 'is-warning';
@@ -79,7 +80,7 @@ const getPaleo = async () => {
                         </a>
                         {isAuthenticated ? (
                           <span className="button is-success column is-narrow" data-target="modal-image2" 
-                          onClick={() => addRecepie(recepie.title, recepie.sourceUrl)}>Add to Yumms</span>
+                          onClick={() => addRecepie(recepie.title, recepie.sourceUrl, recepie.image)}>Add to Yumms</span>
                           ) : (
                             <span className="button is-light column is-narrow" data-target="modal-image2" >Add to Yumms</span>
                           )

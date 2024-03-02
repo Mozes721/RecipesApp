@@ -6,4 +6,5 @@ type Recepie struct {
 	Rating int
 	Title  string
 	Url    string
+	ImageUrl    string
 }

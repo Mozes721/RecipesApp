@@ -13,6 +13,7 @@ interface Recepie {
     userID?: string;
     title?: string;
     url?: string;
+    imageUrl?: string;
     made?: boolean;
     rating?: number;
 }

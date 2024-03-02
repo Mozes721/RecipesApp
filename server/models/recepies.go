@@ -16,10 +16,11 @@ type User struct {
 
 type Recepie struct {
 	User
-	Made   bool
-	Rating int
-	Title  string
-	Url    string
+	Made     bool
+	Rating   int
+	Title    string
+	Url      string
+	ImageUrl string
 }
 
 func (u *User) ReadUserCollection(c *gin.Context, client *firestore.Client) *firestore.DocumentSnapshot {
@@ -49,8 +50,6 @@ func (r *Recepie) AddRecepie(client *firestore.Client) (string, int) {
 		status  int
 	)
 	exists := r.checkCollection(client)
-	fmt.Println(exists)
-	fmt.Println(r.Url, r.Title, r.UserID)
 	if exists {
 		message = "Recepie is already added to your list of Yumms."
 		status = 409
@@ -69,11 +68,12 @@ func (r *Recepie) addCollectionRecepie(client *firestore.Client) string {
 	message := "Recepie successfully added to Yumms."
 
 	_, _, err := client.Collection("my-recepies").Add(ctx, map[string]interface{}{
-		"UserID": r.User.UserID,
-		"Made":   r.Made,
-		"Rating": r.Rating,
-		"Title":  r.Title,
-		"Url":    r.Url,
+		"UserID":   r.User.UserID,
+		"Made":     r.Made,
+		"Rating":   r.Rating,
+		"Title":    r.Title,
+		"Url":      r.Url,
+		"ImageUrl": r.ImageUrl,
 	})
 	if err != nil {
 		message = "Issue with adding to your collection"

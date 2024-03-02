@@ -10,12 +10,10 @@ export function addNewRecepie(recipe: Recepie, token: string | undefined): Promi
 
     return axios.post(serverPostUrl, recipe, { headers:  {Authorization: `Bearer ${token}` } })
         .then((response) => {
-            console.log(response)
             return {status: response.status, message: response.data.message}
          
         })
         .catch((error) => {
-            console.log(error)
             return { status: error.response.status, message: error.response.data.message };
         });
 }

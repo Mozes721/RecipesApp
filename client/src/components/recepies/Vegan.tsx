@@ -32,11 +32,12 @@ const Vegan: React.FC = () => {
     const authToken = useSelector((state: AuthenticationUserStates) => state.authToken);
     const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
 
-    const addRecepie = async (title: string, url: string) =>  {
+    const addRecepie = async (title: string, url: string, image: string) =>  {
         const recepie: Recepie = {
             userID: userID,
             title: title,
             url: url,
+            imageUrl: image,
             made: false,
             rating: 0
         };
@@ -78,7 +79,7 @@ const Vegan: React.FC = () => {
                                                 </a>
                                                {isAuthenticated ? (
                                                 <span className="button is-success column is-narrow" data-target="modal-image2" 
-                                                onClick={() => addRecepie(recepie.title, recepie.sourceUrl)}>Add to Yumms</span>
+                                                onClick={() => addRecepie(recepie.title, recepie.sourceUrl, recepie.image)}>Add to Yumms</span>
                                                 ) : (
                                                     <span className="button is-light column is-narrow" data-target="modal-image2" >Add to Yumms</span>
                                                 )
