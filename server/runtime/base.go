@@ -13,6 +13,8 @@ func Start(a *app.Application) error {
 
 	router.Use(cors.New(md.CORSMiddleware()))
 
+	api.SetCache(router, a.RedisClient)
+
 	api.SetRoutes(router, a.FireClient, a.FireAuth)
 
 	err := router.Run(":" + a.ListenPort)

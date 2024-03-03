@@ -5,8 +5,9 @@ import (
 	"context"
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
+	"fmt"
+	"github.com/redis/go-redis/v9"
 	"google.golang.org/api/option"
-	"log"
 )
 
 func FirebaseApp(ctx context.Context) (*firebase.App, error) {
@@ -42,8 +43,17 @@ func GetAuthClient(ctx context.Context) (*auth.Client, error) {
 	return authClient, nil
 }
 
-func checkErr(err error, msg string) {
+func RedisConnect(port string) (*redis.Client, error) {
+	client := redis.NewClient(&redis.Options{
+		Addr:     port,
+		Password: "",
+		DB:       0,
+	})
+	ping, err := client.Ping(context.Background()).Result()
 	if err != nil {
-		log.Fatalln(msg, err)
+		return nil, err
 	}
+
+	fmt.Println(ping)
+	return client, nil
 }
