@@ -44,16 +44,17 @@ func GetAuthClient(ctx context.Context) (*auth.Client, error) {
 }
 
 func RedisConnect(port string) (*redis.Client, error) {
-	client := redis.NewClient(&redis.Options{
-		Addr:     port,
-		Password: "",
-		DB:       0,
-	})
-	ping, err := client.Ping(context.Background()).Result()
+	opt, err := redis.ParseURL(port)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse Redis URL: %w", err)
 	}
 
-	fmt.Println(ping)
+	client := redis.NewClient(opt)
+	ping, err := client.Ping(context.Background()).Result()
+	if err != nil {
+		return nil, fmt.Errorf("failed to ping Redis server: %w", err)
+	}
+
+	fmt.Println("Ping response from Redis:", ping)
 	return client, nil
 }

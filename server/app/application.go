@@ -33,7 +33,10 @@ func (a *Application) LoadConfigurations() error {
 	}
 	a.FireAuth = fireAuth
 
-	a.RedisPort = envy.Get("REDIS_PORT", "localhost:6379")
+	a.RedisPort, err = envy.MustGet("REDIS_SERVER")
+	if err != nil {
+		return err
+	}
 
 	redisClient, err := RedisConnect(a.RedisPort)
 	if err != nil {

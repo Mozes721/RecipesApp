@@ -5,8 +5,19 @@ import (
 	"firebase.google.com/go/auth"
 	md "github.com/RecepieApp/server/middleware"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	"net/http"
 )
+
+func SetCache(router *gin.Engine, client *redis.Client) {
+	router.GET("/set-cache", func(c *gin.Context) {
+		getCache(c, client)
+	})
+
+	router.POST("/get-cache", func(c *gin.Context) {
+		setCache(c, client)
+	})
+}
 
 func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client) {
 	router.OPTIONS("/*any", func(c *gin.Context) {

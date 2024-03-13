@@ -3,7 +3,7 @@ import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
 import { AuthenticationUserStates, Recepie } from '../../types/global'
 import { useSelector } from "react-redux";
-import {addNewRecepie} from "../../api/Yumms/RecepieAdd";
+import { addNewRecepie } from "../../api/Yumms/RecepieAdd";
 import { toastNotification } from "../toast"
 
 const Paleo: React.FC = () => {

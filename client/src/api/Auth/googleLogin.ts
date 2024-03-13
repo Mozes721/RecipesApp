@@ -1,5 +1,6 @@
 import { GoogleAuthProvider, signInWithPopup, Auth } from 'firebase/auth';
 import { storeUser } from "../../hooks/storeUser";
+import {AuthenticationUserStates} from "../../types/global";
 
 
 const provider = new GoogleAuthProvider();
@@ -10,11 +11,15 @@ export function signInWithGoogle(authInstance: Auth): Promise<void> {
     return new Promise((resolve, reject) => {
         signInWithPopup(authInstance, provider)
             .then((userCredential) => {
-                const userID = userCredential.user.uid;
-                const userEmail = userCredential.user.email;
                 userCredential.user.getIdToken(true)
                     .then(idToken => {
-                        storeUser(userID, userEmail, idToken);
+                        let cachedUser: AuthenticationUserStates = {
+                            authenticated: true,
+                            authToken: idToken,
+                            userID: userCredential.user.uid,
+                            email: userCredential.user.email || ''
+                        };
+                        storeUser(cachedUser);
                         resolve();
                     })
                     .catch(error => {
