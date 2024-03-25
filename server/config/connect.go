@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/api/option"
+	"os"
 )
 
 func FirebaseApp(ctx context.Context) (*firebase.App, error) {
@@ -43,13 +44,29 @@ func GetAuthClient(ctx context.Context) (*auth.Client, error) {
 	return authClient, nil
 }
 
-func RedisConnect(port string) (*redis.Client, error) {
-	opt, err := redis.ParseURL(port)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse Redis URL: %w", err)
+func redisClientPort(port string, envExists bool) (*redis.Client, error) {
+	if envExists {
+		opt, err := redis.ParseURL(port)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse Redis URL: %w", err)
+		}
+		return redis.NewClient(opt), nil
 	}
 
-	client := redis.NewClient(opt)
+	return redis.NewClient(&redis.Options{
+		Addr:     port,
+		Password: "",
+		DB:       0,
+	}), nil
+}
+
+func RedisConnect(port string) (*redis.Client, error) {
+	_, ok := os.LookupEnv(port)
+	client, err := redisClientPort(port, ok)
+	if err != nil {
+		return nil, fmt.Errorf("failed to ping Redis server: %w", err)
+	}
+
 	ping, err := client.Ping(context.Background()).Result()
 	if err != nil {
 		return nil, fmt.Errorf("failed to ping Redis server: %w", err)

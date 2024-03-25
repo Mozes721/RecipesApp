@@ -1,31 +1,28 @@
 package models
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
 
-func (u *User) GetUserCache(ctx *gin.Context, client *redis.Client, userCache *UserCache) error {
-	key := fmt.Sprintf("user:%s", u.UserID)
+func GetUserCache(ctx *gin.Context, client *redis.Client, userID string) (map[string]string, error) {
+	key := fmt.Sprintf("user:%s", userID)
 
-	cache, err := client.Get(ctx, key).Result()
+	cache, err := client.HGetAll(ctx, key).Result()
 	if err != nil {
-		return fmt.Errorf("failed to get cache: %v", err)
+		return nil, fmt.Errorf("failed to get cache: %v", err)
 	}
 
-	return json.Unmarshal([]byte(cache), userCache)
+	return cache, nil
 }
 
-func (c *UserCache) SetUserCache(ctx *gin.Context, client *redis.Client) error {
-	key := fmt.Sprintf("user:%s", c.UserID)
-
+func (c *UserCache) SetUserCache(ctx *gin.Context, client *redis.Client, key string) error {
 	fields := map[string]interface{}{
 		"Authenticated": c.Authenticated,
 		"AuthToken":     c.AuthToken,
-		"UserID":        c.User.UserID,
+		"UserID":        c.UserID,
 		"Email":         c.Email,
 	}
 

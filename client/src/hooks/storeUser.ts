@@ -1,7 +1,7 @@
-import store from '../store/store'
-import {AuthenticationUserStates, Recepie} from '../types/global';
-import {cacheUser} from "../api/Auth/cacheUser";
-import {Simulate} from "react-dom/test-utils";
+import { store } from '../store/store';
+import { AuthenticationUserStates } from '../types/global';
+import { cacheUser } from "../api/Auth/cacheUser";
+import { Simulate } from "react-dom/test-utils";
 import error = Simulate.error;
 
 

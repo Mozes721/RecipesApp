@@ -1,13 +1,12 @@
 package app
 
 import (
-	"context"
-	"github.com/gobuffalo/envy"
-	"github.com/redis/go-redis/v9"
-
 	"cloud.google.com/go/firestore"
+	"context"
 	"firebase.google.com/go/auth"
 	. "github.com/RecepieApp/server/config"
+	"github.com/gobuffalo/envy"
+	"github.com/redis/go-redis/v9"
 )
 
 type Application struct {
@@ -33,10 +32,7 @@ func (a *Application) LoadConfigurations() error {
 	}
 	a.FireAuth = fireAuth
 
-	a.RedisPort, err = envy.MustGet("REDIS_SERVER")
-	if err != nil {
-		return err
-	}
+	a.RedisPort = envy.Get("REDIS_SERVER", "localhost:6379")
 
 	redisClient, err := RedisConnect(a.RedisPort)
 	if err != nil {

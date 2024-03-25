@@ -10,11 +10,11 @@ import (
 )
 
 func SetCache(router *gin.Engine, client *redis.Client) {
-	router.GET("/set-cache", func(c *gin.Context) {
+	router.GET("/get-cache", func(c *gin.Context) {
 		getCache(c, client)
 	})
 
-	router.POST("/get-cache", func(c *gin.Context) {
+	router.POST("/set-cache", func(c *gin.Context) {
 		setCache(c, client)
 	})
 }

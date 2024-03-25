@@ -10,19 +10,15 @@ import (
 	"time"
 )
 
-type User struct {
-	UserID string
-}
-
 type UserCache struct {
 	Authenticated bool   `redis:"Authenticated"`
 	AuthToken     string `redis:"AuthToken"`
-	User          `redis:"User"`
+	UserID        string `redis:"User"`
 	Email         string `redis:"Email"`
 }
 
 type Recepie struct {
-	User
+	UserID   string
 	Made     bool
 	Rating   int
 	Title    string
@@ -30,9 +26,9 @@ type Recepie struct {
 	ImageUrl string
 }
 
-func (u *User) ReadUserCollection(ctx *gin.Context, client *firestore.Client) *firestore.DocumentSnapshot {
+func ReadUserCollection(ctx *gin.Context, client *firestore.Client, userID string) (*firestore.DocumentSnapshot, error) {
 	projectID := "my-recepies"
-	iter := client.Collection(projectID).Where("UserID", "==", u.UserID).Documents(ctx)
+	iter := client.Collection(projectID).Where("UserID", "==", userID).Documents(ctx)
 	var data *firestore.DocumentSnapshot
 	for {
 		doc, err := iter.Next()
@@ -40,15 +36,13 @@ func (u *User) ReadUserCollection(ctx *gin.Context, client *firestore.Client) *f
 			break
 		}
 		if err != nil {
-			ctx.JSON(404, gin.H{
-				"Message": "Failed to iterate",
-			})
+			return nil, err
 		}
 
 		data = doc
 	}
 
-	return data
+	return data, nil
 }
 
 func (r *Recepie) AddRecepie(client *firestore.Client) (string, int) {
@@ -75,7 +69,7 @@ func (r *Recepie) addCollectionRecepie(client *firestore.Client) string {
 	message := "Recepie successfully added to Yumms."
 
 	_, _, err := client.Collection("my-recepies").Add(ctx, map[string]interface{}{
-		"UserID":   r.User.UserID,
+		"UserID":   r.UserID,
 		"Made":     r.Made,
 		"Rating":   r.Rating,
 		"Title":    r.Title,
@@ -96,7 +90,7 @@ func (r *Recepie) UpdateRecepie(ctx *gin.Context, client *firestore.Client) erro
 		return fmt.Errorf("failed updating document: %v", exists)
 	}
 
-	_, err := client.Collection("my-recepies").Doc(r.User.UserID+"_"+r.Title).Update(ctx, []firestore.Update{
+	_, err := client.Collection("my-recepies").Doc(r.UserID+"_"+r.Title).Update(ctx, []firestore.Update{
 		{
 			Path:  "Made",
 			Value: r.Made,
@@ -117,7 +111,7 @@ func (r *Recepie) UpdateRecepie(ctx *gin.Context, client *firestore.Client) erro
 
 func (r *Recepie) DeleteUserRecepie(ctx *gin.Context, client *firestore.Client) *firestore.DocumentSnapshot {
 	projectID := "my-recepies"
-	docRef := client.Collection(projectID).Doc(r.User.UserID + "_" + r.Title)
+	docRef := client.Collection(projectID).Doc(r.UserID + "_" + r.Title)
 	snapshot, err := docRef.Get(ctx)
 	if err != nil {
 		ctx.JSON(500, gin.H{
