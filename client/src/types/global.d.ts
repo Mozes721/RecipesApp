@@ -1,7 +1,3 @@
-interface User {
-    userID?: string;
-}
-
 interface AuthenticationUserStates {
     authenticated?: boolean;
     authToken?: string;
@@ -22,4 +18,4 @@ interface Recepies {
     recepies: Recepie[];
 }
 
-export { User, AuthenticationUserStates, Recepie, Recepies };
+export {  AuthenticationUserStates, Recepie, Recepies };

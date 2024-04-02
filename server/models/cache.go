@@ -15,15 +15,17 @@ func GetUserCache(ctx *gin.Context, client *redis.Client, userID string) (map[st
 		return nil, fmt.Errorf("failed to get cache: %v", err)
 	}
 
+	client.Expire(ctx, key, 7*24*time.Hour)
+
 	return cache, nil
 }
 
 func (c *UserCache) SetUserCache(ctx *gin.Context, client *redis.Client, key string) error {
 	fields := map[string]interface{}{
-		"Authenticated": c.Authenticated,
-		"AuthToken":     c.AuthToken,
-		"UserID":        c.UserID,
-		"Email":         c.Email,
+		"authenticated": c.Authenticated,
+		"authToken":     c.AuthToken,
+		"userID":        c.UserID,
+		"email":         c.Email,
 	}
 
 	err := client.HSet(ctx, key, fields).Err()

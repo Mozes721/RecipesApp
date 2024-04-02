@@ -15,10 +15,13 @@ import  Yumms from './pages/Yumms';
 
  const App: React.FC = () => {
      const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
-     const userID = useSelector((state: User) => state.userID);
-     console.log(userID);
+     const userID = useSelector((state: AuthenticationUserStates) => state.userID);
+     const email = useSelector((state: AuthenticationUserStates) => state.email);
+     console.log(email)
      useEffect(() => {
-         getUserDetails(userID);
+         if (userID !== "" && userID !== undefined) {
+             getUserDetails(userID);
+         }
      }, [userID]);
      return (
       <Provider store={store}>

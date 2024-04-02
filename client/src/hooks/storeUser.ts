@@ -6,15 +6,19 @@ import error = Simulate.error;
 
 
 export function storeUser(user: AuthenticationUserStates) {
-    const {authToken, userID, email} =  user
-    cacheUser(user).then(r => {})
-        .catch(error)
-    store.dispatch({
-        type: 'SET_USER',
-        payload: {
-            userID,
-            email,
-            authToken,
-        },
-    });
+    cacheUser(user)
+        .then(cachedUser => {
+            store.dispatch({
+                type: 'SET_USER',
+                payload: {
+                    userID: user.userID,
+                    email: user.email,
+                    authToken: user.authToken
+                },
+            });
+        })
+        .catch(error => {
+            console.error('Failed to cache user:', error);
+            throw new Error('Failed to cache user. Please try again.');
+        });
 }

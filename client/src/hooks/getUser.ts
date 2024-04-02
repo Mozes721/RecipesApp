@@ -3,13 +3,13 @@ import { getCacheUser } from "../api/Auth/getCacheUser";
 
 
 export function getUserDetails(userID: string | undefined) {
-    return getCacheUser(userID)
-        .then(user => {
-            store.dispatch({
-                type: 'GET_USER',
-                payload: {
-                     user
-                },
-            });
-        })
+    console.log("Checking")
+    const userData = getCacheUser(userID);
+        store.dispatch({
+            type: 'GET_USER',
+            payload: {
+                user: userData
+            },
+        });
+
 }

@@ -9,7 +9,7 @@ import (
 
 func setCache(ctx *gin.Context, client *redis.Client) {
 	var userCache models.UserCache
-
+	fmt.Println("Setting cache")
 	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &userCache)
 	if err != nil {
 		ctx.JSON(400, gin.H{
@@ -18,10 +18,9 @@ func setCache(ctx *gin.Context, client *redis.Client) {
 	}
 
 	key := fmt.Sprintf("user:%s", userCache.UserID)
-	val, existsErr := client.HGetAll(ctx, key).Result()
+	_, existsErr := client.HGetAll(ctx, key).Result()
 
-	switch {
-	case existsErr == redis.Nil:
+	if existsErr != redis.Nil {
 		responseErr := userCache.SetUserCache(ctx, client, key)
 		if responseErr != nil {
 			ctx.JSON(400, gin.H{
@@ -29,15 +28,13 @@ func setCache(ctx *gin.Context, client *redis.Client) {
 			})
 			return
 		}
-	case val != nil:
-		return
 	}
 
 }
 
 func getCache(ctx *gin.Context, client *redis.Client) {
-	userID := ctx.Request.URL.Query().Get("userID")
-
+	userID := ctx.Query("userID")
+	fmt.Println("Getting cache")
 	var userCache models.UserCache
 	cache, responseErr := models.GetUserCache(ctx, client, userID)
 	if responseErr != nil {

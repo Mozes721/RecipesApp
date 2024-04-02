@@ -13,7 +13,7 @@ import (
 type UserCache struct {
 	Authenticated bool   `redis:"Authenticated"`
 	AuthToken     string `redis:"AuthToken"`
-	UserID        string `redis:"User"`
+	UserID        string `redis:"UserID"`
 	Email         string `redis:"Email"`
 }
 

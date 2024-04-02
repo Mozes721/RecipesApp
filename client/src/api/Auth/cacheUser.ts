@@ -1,7 +1,7 @@
 import { AuthenticationUserStates } from '../../types/global';
 import axios from 'axios';
 
-export function cacheUser(cacheUser: AuthenticationUserStates): Promise<void> {
+export function cacheUser(cacheUser: AuthenticationUserStates): Promise<axios.AxiosResponse<any> | void> {
     const serverCacheUrl = process.env.REACT_APP_SET_CACHE;
 
     if (!serverCacheUrl) {
@@ -9,7 +9,9 @@ export function cacheUser(cacheUser: AuthenticationUserStates): Promise<void> {
     }
 
     return axios.post(serverCacheUrl, cacheUser)
-        .then(() => {})
+        .then((response) => {
+            return response.data;
+        })
         .catch((error) => {
             console.error('Failed to cache user:', error);
             throw new Error('Failed to cache user. Please try again.');

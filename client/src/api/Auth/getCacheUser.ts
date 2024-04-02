@@ -10,18 +10,16 @@ export function getCacheUser(userID: string | undefined): Promise<Authentication
         return Promise.reject(new Error('REACT_APP_GET_CACHE is not defined'));
     }
 
-    if (userID === "" || userID === undefined )  {
-        return Promise.resolve();
-    }
 
-    return axios.get(`${serverGetCacheUrl}?userID=${userID}`)
+    return axios.get(`${serverGetCacheUrl}`, { params: { userID: userID }})
         .then((response) => {
             const getCachedUser: AuthenticationUserStates = {
-                authenticated: response.data.authenticated,
-                authToken: response.data.idToken,
-                userID: response.data.user.uid,
-                email: response.data.user.email || ''
+                authenticated: response.data.Authenticated,
+                authToken: response.data.AuthToken,
+                userID: response.data.user.UserID,
+                email: response.data.user.Email || ''
             };
+            console.log(getCachedUser)
 
             return getCachedUser;
         })

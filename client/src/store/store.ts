@@ -38,7 +38,7 @@ const authReducer: Reducer<AuthenticationUserStates, any> = (
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['userID'],
+    whitelist: ['authenticated', 'authToken', 'userID', 'email'],
 }
 
 const persistedReducer = persistReducer(persistConfig, authReducer)
