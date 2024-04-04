@@ -5,16 +5,29 @@ import (
 	"firebase.google.com/go/auth"
 	md "github.com/RecepieApp/server/middleware"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	"net/http"
 )
 
-func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client) {
+func SetCache(router *gin.Engine, client *redis.Client) {
+	router.POST("/set-cache", func(c *gin.Context) {
+		setUserCache(c, client)
+	})
+
+	router.GET("/check-expiration", func(c *gin.Context) {
+		checkTokenExpiration(c, client)
+	})
+
+}
+
+func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client, redisClient *redis.Client) {
 	router.OPTIONS("/*any", func(c *gin.Context) {
 		c.Status(http.StatusOK)
 	})
 
 	router.Use(func(c *gin.Context) {
-		md.AuthJWT(auth)(c)
+		authToken := getUserCache(c, redisClient)
+		md.AuthJWT(auth, authToken)(c)
 	})
 
 	router.GET("/:id", func(c *gin.Context) {

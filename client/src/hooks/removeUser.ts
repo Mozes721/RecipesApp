@@ -1,4 +1,4 @@
-import store from '../store/store';
+import { store } from '../store/store'
 
 export function removeUser(event: React.MouseEvent<HTMLSpanElement, MouseEvent>): Promise<void> {
     event.stopPropagation();

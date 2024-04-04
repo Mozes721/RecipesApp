@@ -11,10 +11,10 @@ import (
 	"time"
 )
 
-func AuthJWT(client *auth.Client) gin.HandlerFunc {
+func AuthJWT(client *auth.Client, authToken string) gin.HandlerFunc {
+
 	return func(c *gin.Context) {
-		authHeader := c.Request.Header.Get("Authorization")
-		token := strings.Replace(authHeader, "Bearer ", "", 1)
+		token := strings.Replace(authToken, "Bearer ", "", 1)
 
 		idToken, err := client.VerifyIDTokenAndCheckRevoked(c, token)
 		if err != nil {

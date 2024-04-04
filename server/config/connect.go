@@ -5,11 +5,13 @@ import (
 	"context"
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
+	"fmt"
+	"github.com/redis/go-redis/v9"
 	"google.golang.org/api/option"
-	"log"
+	"os"
 )
 
-func FirebaseApp(ctx context.Context) (*firebase.App, error) {
+func firebaseApp(ctx context.Context) (*firebase.App, error) {
 	opt := option.WithCredentialsFile("/mnt/c/Users/RichardTaujenis/Desktop/RecipesApp/server/config/account_key.json")
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
@@ -19,7 +21,7 @@ func FirebaseApp(ctx context.Context) (*firebase.App, error) {
 }
 
 func GetFirestoreClient(ctx context.Context) (*firestore.Client, error) {
-	app, err := FirebaseApp(ctx)
+	app, err := firebaseApp(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +33,7 @@ func GetFirestoreClient(ctx context.Context) (*firestore.Client, error) {
 }
 
 func GetAuthClient(ctx context.Context) (*auth.Client, error) {
-	app, err := FirebaseApp(ctx)
+	app, err := firebaseApp(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +44,34 @@ func GetAuthClient(ctx context.Context) (*auth.Client, error) {
 	return authClient, nil
 }
 
-func checkErr(err error, msg string) {
-	if err != nil {
-		log.Fatalln(msg, err)
+func redisClientPort(port string, envExists bool) (*redis.Client, error) {
+	if envExists {
+		opt, err := redis.ParseURL(port)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse Redis URL: %w", err)
+		}
+		return redis.NewClient(opt), nil
 	}
+
+	return redis.NewClient(&redis.Options{
+		Addr:     port,
+		Password: "",
+		DB:       0,
+	}), nil
+}
+
+func RedisConnect(port string) (*redis.Client, error) {
+	_, ok := os.LookupEnv(port)
+	client, err := redisClientPort(port, ok)
+	if err != nil {
+		return nil, fmt.Errorf("failed to ping Redis server: %w", err)
+	}
+
+	ping, err := client.Ping(context.Background()).Result()
+	if err != nil {
+		return nil, fmt.Errorf("failed to ping Redis server: %w", err)
+	}
+
+	fmt.Println("Ping response from Redis:", ping)
+	return client, nil
 }

@@ -8,11 +8,7 @@ import (
 
 func showRecepies(ctx *gin.Context, client *firestore.Client, userID string) {
 
-	user := models.User{
-		UserID: userID,
-	}
-
-	user.ReadUserCollection(ctx, client)
+	models.ReadUserCollection(ctx, client, userID)
 }
 
 func addRecepie(ctx *gin.Context, client *firestore.Client) {
