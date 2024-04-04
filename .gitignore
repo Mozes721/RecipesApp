@@ -1,3 +1,4 @@
 server/config/account_key.json
 server/.env
 .idea
+.env
