@@ -1,11 +1,11 @@
 import { createStore, Reducer } from 'redux';
-import { AuthenticationUserStates, User } from '../types/global';
+import { AuthenticationUserStates } from '../types/global';
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+
 const initialState: AuthenticationUserStates = {
     authenticated: false,
-    authToken: '',
     userID: '',
     email: '',
 };
@@ -20,7 +20,6 @@ const authReducer: Reducer<AuthenticationUserStates, any> = (
             console.log("SET_USER action dispatched");
             return {
                 authenticated: true,
-                authToken: action.payload.accessToken,
                 userID: action.payload.userID,
                 email: action.payload.email,
             };
@@ -38,7 +37,7 @@ const authReducer: Reducer<AuthenticationUserStates, any> = (
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['authenticated', 'authToken', 'userID', 'email'],
+    whitelist: ['authenticated',  'userID', 'email'],
 }
 
 const persistedReducer = persistReducer(persistConfig, authReducer)

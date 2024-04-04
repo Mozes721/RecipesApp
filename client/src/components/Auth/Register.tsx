@@ -12,7 +12,7 @@ interface RegisterFormProps {
     onSwitchForm: () => void;
 }
 
-  const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchForm }) => {
+const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchForm }) => {
 
     const [registerEmail, setRegisterEmail] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");

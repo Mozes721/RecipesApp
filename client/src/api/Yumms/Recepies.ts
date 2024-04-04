@@ -1,7 +1,7 @@
 import { Recepies } from '../../types/global';
 import axios from 'axios';
 
-export function getRecepie(userID: string | undefined, token: string | undefined): Promise<Recepies | void> {
+export function getRecepie(userID: string | undefined): Promise<Recepies | void> {
     const servergetUrl = process.env.REACT_APP_SERVER_GET;
 
     if (!servergetUrl) {
@@ -10,7 +10,7 @@ export function getRecepie(userID: string | undefined, token: string | undefined
 
      const url = `${servergetUrl}/${userID}`;
 
-    return axios.get(url, { headers:  {Authorization: `Bearer ${token}` } })
+    return axios.get(url, { params: { userID: userID }})
         .then((response) => {
 
             return response.data as Recepies

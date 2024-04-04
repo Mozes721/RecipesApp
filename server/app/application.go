@@ -1,12 +1,13 @@
 package app
 
 import (
-	"cloud.google.com/go/firestore"
 	"context"
-	"firebase.google.com/go/auth"
-	. "github.com/RecepieApp/server/config"
 	"github.com/gobuffalo/envy"
 	"github.com/redis/go-redis/v9"
+
+	"cloud.google.com/go/firestore"
+	"firebase.google.com/go/auth"
+	. "github.com/RecepieApp/server/config"
 )
 
 type Application struct {

@@ -4,36 +4,41 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
+	"log"
 	"time"
 )
 
-func GetUserCache(ctx *gin.Context, client *redis.Client, userID string) (map[string]string, error) {
+type UserCache struct {
+	UserID    string `redis:"UserID"`
+	AuthToken string `redis:"AuthToken"`
+}
+
+func GetUserCacheToken(ctx *gin.Context, client *redis.Client, userID string) (string, error) {
 	key := fmt.Sprintf("user:%s", userID)
 
 	cache, err := client.HGetAll(ctx, key).Result()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get cache: %v", err)
+		return "", fmt.Errorf("failed to get cache: %v", err)
 	}
 
-	client.Expire(ctx, key, 7*24*time.Hour)
+	authToken, ok := cache["AuthToken"]
+	if !ok {
+		return "", fmt.Errorf("AuthToken not found in cache")
+	}
 
-	return cache, nil
+	return authToken, nil
 }
 
-func (c *UserCache) SetUserCache(ctx *gin.Context, client *redis.Client, key string) error {
+func (c *UserCache) SetCachedToken(ctx *gin.Context, client *redis.Client, key string) {
 	fields := map[string]interface{}{
-		"authenticated": c.Authenticated,
-		"authToken":     c.AuthToken,
-		"userID":        c.UserID,
-		"email":         c.Email,
+		"UserID":    c.UserID,
+		"AuthToken": c.AuthToken,
 	}
-
 	err := client.HSet(ctx, key, fields).Err()
 	if err != nil {
-		return fmt.Errorf("failed to cache user: %v", err)
+		log.Printf("Issues setting Cached Token %v", err)
 	}
 
 	client.Expire(ctx, key, 7*24*time.Hour)
 
-	return nil
 }

@@ -30,7 +30,6 @@ const Whole: React.FC = () => {
     };
 
     const userID = useSelector((state: AuthenticationUserStates) => state.userID);
-    const authToken = useSelector((state: AuthenticationUserStates) => state.authToken);
     const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
 
     const addRecepie = async (title: string, url: string, image: string) =>  {
@@ -44,7 +43,7 @@ const Whole: React.FC = () => {
         };
 
     
-    const response = await addNewRecepie(recepie, authToken);
+    const response = await addNewRecepie(recepie, userID);
     const typeClass = response.status === 200 ? 'is-success' : 'is-warning';
 
     toastNotification(response.message, typeClass);

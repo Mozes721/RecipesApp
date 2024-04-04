@@ -5,52 +5,53 @@ import (
 	"github.com/RecepieApp/server/models"
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
+	"log"
+	"net/http"
 )
 
-func setCache(ctx *gin.Context, client *redis.Client) {
+func getUserCache(ctx *gin.Context, client *redis.Client) string {
+	userID := ctx.Query("userID")
+
+	authToken, err := models.GetUserCacheToken(ctx, client, userID)
+	if err != nil {
+		log.Printf("Issues retriving  Cached Token %v", err)
+		return ""
+	}
+
+	return authToken
+}
+
+func setUserCache(ctx *gin.Context, client *redis.Client) {
 	var userCache models.UserCache
-	fmt.Println("Setting cache")
+
 	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &userCache)
 	if err != nil {
-		ctx.JSON(400, gin.H{
-			"message": "Unable to parse data",
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": "Unable to parse data",
 		})
+		return
 	}
 
 	key := fmt.Sprintf("user:%s", userCache.UserID)
-	_, existsErr := client.HGetAll(ctx, key).Result()
+	_, notExists := client.HGetAll(ctx, key).Result()
 
-	if existsErr != redis.Nil {
-		responseErr := userCache.SetUserCache(ctx, client, key)
-		if responseErr != nil {
-			ctx.JSON(400, gin.H{
-				"message": responseErr.Error(),
-			})
-			return
-		}
+	if notExists == nil {
+		userCache.SetCachedToken(ctx, client, key)
+		return
 	}
 
 }
 
-func getCache(ctx *gin.Context, client *redis.Client) {
-	userID := ctx.Query("userID")
-	fmt.Println("Getting cache")
-	var userCache models.UserCache
-	cache, responseErr := models.GetUserCache(ctx, client, userID)
-	if responseErr != nil {
-		ctx.JSON(400, gin.H{
-			"message": responseErr,
-		})
-		return
-	}
-	err := models.UnmarshallCacheData(cache, &userCache)
-	if err != nil {
-		ctx.JSON(400, gin.H{
-			"message": err,
-		})
-	}
-	ctx.JSON(200, gin.H{
-		"message": userCache,
-	})
-
+func checkTokenExpiration(ctx *gin.Context, client *redis.Client) {
+	//userID := ctx.Query("userID")
+	//key := fmt.Sprintf("user:%s", userID)
+	//var expired bool
+	//
+	//expirationTime := client.ExpireTime(ctx, key).Val()
+	//currentTime := time.Now()
+	//
+	//expired := expirationTime
+	//ctx.JSON(200, gin.H{
+	//	"message": expired,
+	//})
 }

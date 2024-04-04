@@ -15,7 +15,7 @@ func Start(a *app.Application) error {
 
 	api.SetCache(router, a.RedisClient)
 
-	api.SetRoutes(router, a.FireClient, a.FireAuth)
+	api.SetRoutes(router, a.FireClient, a.FireAuth, a.RedisClient)
 
 	err := router.Run(":" + a.ListenPort)
 	if err != nil {

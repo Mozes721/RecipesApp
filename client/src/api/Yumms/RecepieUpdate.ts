@@ -8,6 +8,8 @@ export function updateRecepie(recipe: Recepie): Promise<void> {
         return Promise.reject(new Error('REACT_APP_SERVER_PATCH_DELETE is not defined'));
     }
 
+    // const token = getUserToken(userID)
+
     return axios.post(serverUpdateUrl, recipe)
         .then(() => {})
         .catch((error) => {

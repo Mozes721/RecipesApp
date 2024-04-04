@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-func FirebaseApp(ctx context.Context) (*firebase.App, error) {
+func firebaseApp(ctx context.Context) (*firebase.App, error) {
 	opt := option.WithCredentialsFile("/mnt/c/Users/RichardTaujenis/Desktop/RecipesApp/server/config/account_key.json")
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
@@ -21,7 +21,7 @@ func FirebaseApp(ctx context.Context) (*firebase.App, error) {
 }
 
 func GetFirestoreClient(ctx context.Context) (*firestore.Client, error) {
-	app, err := FirebaseApp(ctx)
+	app, err := firebaseApp(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func GetFirestoreClient(ctx context.Context) (*firestore.Client, error) {
 }
 
 func GetAuthClient(ctx context.Context) (*auth.Client, error) {
-	app, err := FirebaseApp(ctx)
+	app, err := firebaseApp(ctx)
 	if err != nil {
 		return nil, err
 	}

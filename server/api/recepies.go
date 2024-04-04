@@ -7,15 +7,8 @@ import (
 )
 
 func showRecepies(ctx *gin.Context, client *firestore.Client, userID string) {
-	data, err := models.ReadUserCollection(ctx, client, userID)
-	if err != nil {
-		ctx.JSON(400, gin.H{
-			"message": err,
-		})
-	}
-	ctx.JSON(200, gin.H{
-		"message": data,
-	})
+
+	models.ReadUserCollection(ctx, client, userID)
 }
 
 func addRecepie(ctx *gin.Context, client *firestore.Client) {

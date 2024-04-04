@@ -3,7 +3,7 @@ import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
 import { AuthenticationUserStates, Recepie } from '../../types/global'
 import { useSelector } from "react-redux";
-import {addNewRecepie} from "../../api/Yumms/RecepieAdd";
+import { addNewRecepie } from "../../api/Yumms/RecepieAdd";
 import { toastNotification } from "../toast"
 
 const Keto: React.FC = () => {
@@ -30,7 +30,6 @@ const getKeto = async () => {
   };
 
   const userID = useSelector((state: AuthenticationUserStates) => state.userID);
-  const authToken = useSelector((state: AuthenticationUserStates) => state.authToken);
   const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
 
   const addRecepie = async (title: string, url: string, image: string) => {
@@ -43,7 +42,7 @@ const getKeto = async () => {
         rating: 0
     };
 
-    const response = await addNewRecepie(recepie, authToken);
+    const response = await addNewRecepie(recepie, userID);
     const typeClass = response.status === 200 ? 'is-success' : 'is-warning';
 
     toastNotification(response.message, typeClass);
