@@ -6,13 +6,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/RecepieApp/server/utils"
 	"google.golang.org/api/iterator"
 	"io"
 )
 
 func (r *Recepie) checkCollection(client *firestore.Client) bool {
 	ctx := context.Background()
-	iter := client.Collection("my-recepies").Where("UserID", "==", r.UserID).Where("Title", "==", r.Title).Documents(ctx)
+	iter := client.Collection(utils.ProjectID).Where("UserID", "==", r.UserID).Where("Title", "==", r.Title).Documents(ctx)
 	defer iter.Stop()
 
 	for {

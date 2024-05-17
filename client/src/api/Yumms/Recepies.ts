@@ -1,18 +1,18 @@
 import { Recepies } from '../../types/global';
 import axios from 'axios';
+export function getRecepies(userID: string | undefined): Promise<Recepies | void> {
+    const serverGetUrl = process.env.REACT_APP_SERVER_GET;
 
-export function getRecepie(userID: string | undefined): Promise<Recepies | void> {
-    const servergetUrl = process.env.REACT_APP_SERVER_GET;
-
-    if (!servergetUrl) {
+    if (!serverGetUrl) {
         return Promise.reject(new Error('REACT_APP_SERVER_GET is not defined'));
     }
+    if (!userID) {
+        return Promise.reject(new Error('userID is not defined'));
+    }
 
-     const url = `${servergetUrl}/${userID}`;
 
-    return axios.get(url, { params: { userID: userID }})
+    return axios.get(serverGetUrl,  { params: { userID: userID } })
         .then((response) => {
-
             return response.data as Recepies
         })
         .catch((error) => {

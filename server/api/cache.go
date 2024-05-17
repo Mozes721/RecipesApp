@@ -11,7 +11,6 @@ import (
 
 func getUserCache(ctx *gin.Context, client *redis.Client) string {
 	userID := ctx.Query("userID")
-
 	authToken, err := models.GetUserCacheToken(ctx, client, userID)
 	if err != nil {
 		log.Printf("Issues retriving  Cached Token %v", err)

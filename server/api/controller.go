@@ -30,10 +30,8 @@ func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client, 
 		md.AuthJWT(auth, authToken)(c)
 	})
 
-	router.GET("/:id", func(c *gin.Context) {
-		userID := c.Param("id")
-
-		showRecepies(c, client, userID)
+	router.GET("/", func(c *gin.Context) {
+		showRecepies(c, client)
 	})
 
 	router.POST("/recipe", func(c *gin.Context) {
@@ -43,6 +41,7 @@ func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client, 
 	router.PATCH("/recipe/:id", func(c *gin.Context) {
 		updateRecepie(c, client)
 	})
+
 	router.DELETE("/recipes/:id", func(c *gin.Context) {
 		deleteRecepie(c, client)
 	})

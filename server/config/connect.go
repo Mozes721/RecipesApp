@@ -6,13 +6,19 @@ import (
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
 	"fmt"
+	"github.com/gobuffalo/envy"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/api/option"
 	"os"
 )
 
 func firebaseApp(ctx context.Context) (*firebase.App, error) {
-	opt := option.WithCredentialsFile("/mnt/c/Users/RichardTaujenis/Desktop/RecipesApp/server/config/account_key.json")
+	account_key, err := envy.MustGet("FIREBASE_ACCOUNT_KEY_LOCATION")
+	if err != nil {
+		return nil, err
+	}
+
+	opt := option.WithCredentialsFile(account_key)
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		return nil, err
