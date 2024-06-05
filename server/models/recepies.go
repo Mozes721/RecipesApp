@@ -11,35 +11,43 @@ import (
 	"time"
 )
 
-type User struct {
-	UserID string
+type Recepies struct {
+	Recepies []Recepie `json:"recepies"`
 }
 
 type Recepie struct {
-	UserID   string
-	Made     bool
-	Rating   int
-	Title    string
-	Url      string
-	ImageUrl string
+	UserID   string `json:"userID"`
+	Made     bool   `json:"made"`
+	Rating   int    `json:"rating"`
+	Title    string `json:"title"`
+	Url      string `json:"url"`
+	ImageUrl string `json:"imageUrl"`
 }
 
-func ReadUserCollection(c *gin.Context, client *firestore.Client, userID string) (*firestore.DocumentSnapshot, error) {
+func ReadUserCollection(c *gin.Context, client *firestore.Client, userID string) (Recepies, error) {
 	iter := client.Collection(utils.ProjectID).Where("UserID", "==", userID).Documents(c)
-	var data *firestore.DocumentSnapshot
+	var recepies Recepies
+
 	for {
 		doc, err := iter.Next()
 		if errors.Is(err, iterator.Done) {
 			break
 		}
 		if err != nil {
-			return nil, err
+			return recepies, err
 		}
 
-		data = doc
+		var recepie Recepie
+		err = doc.DataTo(&recepie)
+		if err != nil {
+			fmt.Printf("Unable to unmarshal Firestore document data to struct due to %s\n", err)
+			continue
+		}
+		recepies.Recepies = append(recepies.Recepies, recepie)
 	}
 
-	return data, nil
+	return recepies, nil
+
 }
 
 func (r *Recepie) AddRecepie(client *firestore.Client) (string, int) {

@@ -10,7 +10,6 @@ export function cacheUserToken(userID: string | undefined, authToken: string): P
     return axios.post(`${serverCacheUrl}`, { UserID: userID, AuthToken: authToken })
         .then(() => {})
         .catch((error) => {
-            console.error('Failed to cache user:', error);
             throw new Error('Failed to cache user. Please try again.');
         });
 }

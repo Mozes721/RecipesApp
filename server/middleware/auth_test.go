@@ -38,21 +38,6 @@ func TestLogin(t *testing.T) {
 	})
 }
 
-func (u User) createUser(ctx context.Context, client *auth.Client) (*auth.UserRecord, error) {
-	params := (&auth.UserToCreate{}).
-		Email(u.Email).
-		PhoneNumber(u.Phone).
-		Password(u.Password)
-	user, err := client.CreateUser(ctx, params)
-	if err != nil {
-		log.Fatalf("Error creating user: %v\n", err)
-		return nil, err
-	}
-	log.Printf("Successfully created user: %v\n", user)
-
-	return user, nil
-}
-
 func (u User) getUserByEmail(ctx context.Context, email string, client *auth.Client) (*auth.UserRecord, error) {
 	user, err := client.GetUserByEmail(ctx, email)
 	if err != nil {

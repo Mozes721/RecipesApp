@@ -2,33 +2,21 @@ package api
 
 import (
 	"cloud.google.com/go/firestore"
-	"fmt"
 	"github.com/RecepieApp/server/models"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func showRecepies(ctx *gin.Context, client *firestore.Client) {
-	user := models.User{}
+	userID := ctx.Query("userID")
 
-	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &user)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": "Unable to parse data",
-		})
-		return
-	}
-
-	data, err := models.ReadUserCollection(ctx, client, user.UserID)
+	data, err := models.ReadUserCollection(ctx, client, userID)
 	if err != nil {
 		ctx.JSON(404, gin.H{
-			"Message": data,
+			"Message": "Unable to retrieve data",
 		})
 	}
-	fmt.Println(data.Data())
-	ctx.JSON(404, gin.H{
-		"Message": "Failed to iterate",
-	})
+
+	ctx.JSON(200, data)
 
 }
 

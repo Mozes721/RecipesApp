@@ -11,14 +11,12 @@ export function login(authInstance: Auth, loginEmail: string, loginPassword: str
                 userCredential.user.getIdToken(true)
                     .then(idToken => {
                         cacheUserToken(userID, idToken).catch(error => {
-                            console.error('Error setting cache token:', error);
                             reject(error)
                         });
                         storeUser(userID, userEmail);
                         storeUser(userID, userEmail);
                     })
                     .catch(error => {
-                        console.error('Error getting ID token:', error);
                         reject(error)
                     });
             });
