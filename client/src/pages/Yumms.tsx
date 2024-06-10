@@ -32,11 +32,25 @@ const Yumms: React.FC = () => {
     };
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <div className="section py-0">
+            <div className="container mb-16">
+                <div className="has-mw-2xl mx-auto has-text-centered">
+                    <h2 className="mt-8 mb-10 title is-2">Loading...</h2>
+                    <progress className="progress is-small is-primary" max="100">15%</progress>
+                </div>
+            </div>
+        </div>
     }
 
     if (yumms1.length === 0) {
-        return <h2>No recipes have been added yet.</h2>;
+        return <div className="section py-0">
+            <div className="container mb-16">
+                <div className="has-mw-2xl mx-auto has-text-centered">
+                    <h2 className="mt-8 mb-10 title is-2">No recipes have been added yet.</h2>
+                    <progress className="progress is-small is-primary" max="100">15%</progress>
+                </div>
+            </div>
+        </div>
     }
 
     return (

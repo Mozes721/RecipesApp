@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
-import {AuthenticationUserStates, Recepie, Recepies} from '../../types/global'
-import { updateRecepie } from "../../api/Yumms/RecepieUpdate";
-import { toastNotification } from "../toast"
+import { Recepie } from '../../types/global';
+import { toastNotification } from "../toast";
+import { ReviewCard } from "./ReviewModal";
 
 interface IndexProps {
     recepies: Recepie[];
 }
 
 const Index: React.FC<IndexProps> = ({ recepies }) => {
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [selectedRecepie, setSelectedRecepie] = useState<Recepie | null>(null);
+
+    const handleReviewClick = (recepie: Recepie) => {
+        setSelectedRecepie(recepie);
+        setShowModal(true);
+    };
+
     const updateRecepie = async (userID: string, title: string, made: true, rating: number) => {
         const recepie: Recepie = {
             userID: userID,
@@ -25,6 +33,9 @@ const Index: React.FC<IndexProps> = ({ recepies }) => {
 
     return (
         <div>
+            {showModal && selectedRecepie && (
+                <ReviewCard open={showModal} onClose={() => setShowModal(false)} recepie={selectedRecepie} />
+            )}
             <div className="box cta">
                 <p className="has-text-centered">
                     <span className="tag is-primary">Your Recipes</span>
@@ -36,7 +47,7 @@ const Index: React.FC<IndexProps> = ({ recepies }) => {
                     arrows: false,
                 }}>
                     {recepies.map((recepie) => (
-                        <SplideSlide key={recepie.url}> {/* Added key for unique identification */}
+                        <SplideSlide key={recepie.url}>
                             <div className="card is-shady column is-10">
                                 <div className="card-image">
                                     <figure className="image is-3by2">
@@ -52,8 +63,8 @@ const Index: React.FC<IndexProps> = ({ recepies }) => {
                                                 <span className="button is-info modal-button column is-narrow"
                                                       data-target="modal-image2">Link</span>
                                             </a>
-                                            <span className="button is-light column is-narrow"
-                                                  data-target="modal-image2">Submit Review</span>
+                                            <span className="button is-success column is-narrow"
+                                                  data-target="modal-image2" onClick={() => handleReviewClick(recepie)}>Submit Review</span>
                                         </div>
                                     </div>
                                 </div>
