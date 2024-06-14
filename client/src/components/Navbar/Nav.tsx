@@ -6,8 +6,11 @@ import {LuVegan} from "react-icons/lu";
 import {useSelector} from "react-redux";
 import { removeUser } from "../../hooks/removeUser";
 
+interface Session {
+    expired: boolean;
+}
 
-const Nav: React.FC = () => {
+const Nav: React.FC<Session> = ( { expired} ) => {
   let [isActive, setIsActive] = React.useState<boolean>(false);
     const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
     const email = useSelector((state: AuthenticationUserStates) => state.email);
@@ -29,9 +32,9 @@ const Nav: React.FC = () => {
     <>
         <nav className="navbar is-info hero-head">
             <div className="container">
-                {email ? (
+                { email && !expired ? (
                     <div className="navbar-item navbar-start">
-                        <p className="has-text-white">Welcome, {email}</p>
+                        <p className="has-text-white">Welcome, { email }</p>
                         {isAuthenticated && windowWidth > 1022 && (
                             <NavLink
                                 className="button is-white is-outlined ml-2"
@@ -63,7 +66,7 @@ const Nav: React.FC = () => {
                         <span aria-hidden="true"></span>
                     </a>
                     </div>
-                    <Burger isAuthenticated={isAuthenticated} toggleBurgerMenu={isActive} />
+                    <Burger isAuthenticated={isAuthenticated} toggleBurgerMenu={isActive} isExpired={expired} />
                 </>
                 )}
 
@@ -79,9 +82,7 @@ const Nav: React.FC = () => {
                                 </NavLink>
                             </span>
                             <span className="navbar-item">
-                                {isAuthenticated ? (
-                                    null 
-                                ) :
+                                { isAuthenticated && !expired ? null :
                                     <NavLink className="button is-white is-outlined" to="/login-register">
                                         <span className="icon">
                                             <i className="fa-solid fa-door-open"></i>
@@ -113,7 +114,7 @@ const Nav: React.FC = () => {
                                 </NavLink>
                             </span>
                             <span className="navbar-item">
-                                {isAuthenticated ? (
+                                { isAuthenticated && !expired ? (
                                     <NavLink className="button is-white is-outlined" to="yumms">
                                         <span className="icon">
                                             <i className="fa fa-home"></i>

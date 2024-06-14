@@ -13,7 +13,6 @@ export function getRecepies(userID: string | undefined): Promise<Recepies | void
 
     return axios.get(serverGetUrl,  { params: { userID: userID } })
         .then((response) => {
-            console.log(response.data)
             return response.data as Recepies
         })
         .catch((error) => {

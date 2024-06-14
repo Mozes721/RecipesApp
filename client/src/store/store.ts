@@ -10,7 +10,6 @@ const initialState: AuthenticationUserStates = {
     email: '',
 };
 
-// Define your reducer function
 const authReducer: Reducer<AuthenticationUserStates, any> = (
     state = initialState,
     action: any

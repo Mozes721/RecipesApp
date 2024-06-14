@@ -2,7 +2,7 @@ import React from "react";
 import { slide as Menu } from "react-burger-menu";
 import { NavLink } from "react-router-dom";
 import styled from 'styled-components';
-import {removeUser} from "../../hooks/removeUser";
+import { removeUser } from "../../hooks/removeUser";
 
 const StyledBurgerMenu = styled(Menu)`
   /* Position and sizing of burger button */
@@ -59,16 +59,19 @@ const StyledBurgerMenu = styled(Menu)`
   }
 `;
 
-const Burger: React.FC<{
+interface BurgerProps {
     isAuthenticated: boolean | undefined;
     toggleBurgerMenu: boolean;
-}> = ({ isAuthenticated, toggleBurgerMenu }) => {
+    isExpired: boolean;
+}
+
+const Burger: React.FC<BurgerProps> = ({ isAuthenticated, toggleBurgerMenu, isExpired }) => {
     return toggleBurgerMenu ? (
         <StyledBurgerMenu>
           <NavLink className="subtitle is-6 has-text-white" to="/">
                 About Me
             </NavLink>
-            {isAuthenticated ?
+            {isAuthenticated && !isExpired ?
               null :
               (<NavLink className="subtitle is-6 has-text-white" to="/login-register">
                   Login/Register

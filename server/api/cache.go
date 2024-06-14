@@ -42,15 +42,20 @@ func setUserCache(ctx *gin.Context, client *redis.Client) {
 }
 
 func checkTokenExpiration(ctx *gin.Context, client *redis.Client) {
-	//userID := ctx.Query("userID")
-	//key := fmt.Sprintf("user:%s", userID)
-	//var expired bool
-	//
-	//expirationTime := client.ExpireTime(ctx, key).Val()
-	//currentTime := time.Now()
-	//
-	//expired := expirationTime
-	//ctx.JSON(200, gin.H{
-	//	"message": expired,
-	//})
+	userID := ctx.Query("userID")
+	key := fmt.Sprintf("user:%s", userID)
+
+	ttl, err := client.TTL(ctx, key).Result()
+	if err != nil {
+		ctx.JSON(500, gin.H{
+			"error": "Failed to get TTL",
+		})
+		return
+	}
+
+	expired := ttl <= 0
+
+	ctx.JSON(200, gin.H{
+		"message": expired,
+	})
 }

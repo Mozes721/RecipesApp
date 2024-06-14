@@ -1,6 +1,6 @@
 import { GoogleAuthProvider, signInWithPopup, Auth } from 'firebase/auth';
 import { storeUser } from "../../hooks/storeUser";
-import {cacheUserToken} from "./cacheToken";
+import { cacheUserToken } from "./cacheToken";
 
 
 const provider = new GoogleAuthProvider();
