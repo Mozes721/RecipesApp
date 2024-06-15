@@ -9,3 +9,9 @@ export function removeUser(event: React.MouseEvent<HTMLSpanElement, MouseEvent>)
         resolve();
     });
 }
+
+export function logoutSession() {
+    store.dispatch({
+        type: 'LOGOUT'
+    });
+}

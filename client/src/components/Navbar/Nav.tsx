@@ -6,12 +6,9 @@ import {LuVegan} from "react-icons/lu";
 import {useSelector} from "react-redux";
 import { removeUser } from "../../hooks/removeUser";
 
-interface Session {
-    expired: boolean;
-}
 
-const Nav: React.FC<Session> = ( { expired} ) => {
-  let [isActive, setIsActive] = React.useState<boolean>(false);
+const Nav: React.FC = () => {
+    let [isActive, setIsActive] = React.useState<boolean>(false);
     const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
     const email = useSelector((state: AuthenticationUserStates) => state.email);
     const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
@@ -28,51 +25,51 @@ const Nav: React.FC<Session> = ( { expired} ) => {
         };
     }, []);
 
-  return (
-    <>
-        <nav className="navbar is-info hero-head">
-            <div className="container">
-                { email && !expired ? (
-                    <div className="navbar-item navbar-start">
-                        <p className="has-text-white">Welcome, { email }</p>
-                        {isAuthenticated && windowWidth > 1022 && (
-                            <NavLink
-                                className="button is-white is-outlined ml-2"
-                                to="/login-register"
-                                onClick={(e) => removeUser(e)}
-                            >
-                                <span>Exit</span>
-                            </NavLink>
-                        )}
-                    </div>
-                ) : (
-                    <div className="navbar-item navbar-start">
-                        <p className="has-text-white">Not Logged In</p>
-                    </div>
-                )}
-               {windowWidth > 1022 && (
-                <>
-                    <div className="navbar-brand is-clickable">
-                    <a
-                        onClick={(e) => setIsActive(!isActive)}
-                        role="button"
-                        className={`navbar-burger burger`}
-                        aria-label="menu"
-                        aria-expanded="false"
-                        data-target="navbarMenu"
-                    >
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
-                    </div>
-                    <Burger isAuthenticated={isAuthenticated} toggleBurgerMenu={isActive} isExpired={expired} />
-                </>
-                )}
+    return (
+        <>
+            <nav className="navbar is-info hero-head">
+                <div className="container">
+                    {email ? (
+                        <div className="navbar-item navbar-start">
+                            <p className="has-text-white">Welcome, {email}</p>
+                            {isAuthenticated && windowWidth > 1022 && (
+                                <NavLink
+                                    className="button is-white is-outlined ml-2"
+                                    to="/login-register"
+                                    onClick={(e) => removeUser(e)}
+                                >
+                                    <span>Exit</span>
+                                </NavLink>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="navbar-item navbar-start">
+                            <p className="has-text-white">Not Logged In</p>
+                        </div>
+                    )}
+                    {windowWidth > 1022 && (
+                        <>
+                            <div className="navbar-brand is-clickable">
+                                <a
+                                    onClick={(e) => setIsActive(!isActive)}
+                                    role="button"
+                                    className={`navbar-burger burger`}
+                                    aria-label="menu"
+                                    aria-expanded="false"
+                                    data-target="navbarMenu"
+                                >
+                                    <span aria-hidden="true"></span>
+                                    <span aria-hidden="true"></span>
+                                    <span aria-hidden="true"></span>
+                                </a>
+                            </div>
+                            <Burger isAuthenticated={isAuthenticated} toggleBurgerMenu={isActive} />
+                        </>
+                    )}
 
-            </div>
-                    <div id="navbarMenu" className="navbar-menu">
-                        <div className="navbar-end">
+                </div>
+                <div id="navbarMenu" className="navbar-menu">
+                    <div className="navbar-end">
                             <span className="navbar-item">
                             <NavLink className="button is-white is-outlined" to="/">
                                     <span className="icon">
@@ -81,17 +78,17 @@ const Nav: React.FC<Session> = ( { expired} ) => {
                                     <span>About Me</span>
                                 </NavLink>
                             </span>
-                            <span className="navbar-item">
-                                { isAuthenticated && !expired ? null :
+                        <span className="navbar-item">
+                                {isAuthenticated ? null :
                                     <NavLink className="button is-white is-outlined" to="/login-register">
                                         <span className="icon">
                                             <i className="fa-solid fa-door-open"></i>
                                         </span>
                                         <span>Login/Register</span>
                                     </NavLink>
-                                    }
+                                }
                             </span>
-                            <span className="navbar-item">
+                        <span className="navbar-item">
                                 <NavLink className="button is-white is-outlined" to="keto-paelo">
                                     <span className="icon">
                                         <i className="fa fa-superpowers"></i>
@@ -99,7 +96,7 @@ const Nav: React.FC<Session> = ( { expired} ) => {
                                     <span>Keto&Paelo</span>
                                 </NavLink>
                             </span>
-                            <span className="navbar-item">
+                        <span className="navbar-item">
                                 <NavLink className="button is-white is-outlined" to="whole-popular">
                                     <span className="icon">
                                         <i className="fa fa-book"></i>
@@ -107,27 +104,27 @@ const Nav: React.FC<Session> = ( { expired} ) => {
                                     <span>Whole&Popular</span>
                                 </NavLink>
                             </span>
-                            <span className="navbar-item">
+                        <span className="navbar-item">
                                 <NavLink className="button is-white is-outlined p-3" to="vegan-vegetarian">
                                     <LuVegan />
                                     <span className="ml-1">Vegan&Vegetarian</span>
                                 </NavLink>
                             </span>
-                            <span className="navbar-item">
-                                { isAuthenticated && !expired ? (
+                        <span className="navbar-item">
+                                {isAuthenticated ? (
                                     <NavLink className="button is-white is-outlined" to="yumms">
                                         <span className="icon">
                                             <i className="fa fa-home"></i>
                                         </span>
                                         <span>Yumms</span>
                                     </NavLink>
-                                    ) : null
+                                ) : null
                                 }
                             </span>
-                        </div>
                     </div>
+                </div>
             </nav>
-    </>
-  )
+        </>
+    )
 }
 export default Nav

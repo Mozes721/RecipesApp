@@ -12,43 +12,41 @@ import  WholePopular from './pages/WholePopular';
 import  Veg from './pages/Veg';
 import  Yumms from './pages/Yumms';
 import { checkSessionExpiration } from "./api/Auth/checkExpiration";
+import { logoutSession } from "./hooks/removeUser";
 
  const App: React.FC = () => {
      const isAuthenticated = useSelector((state: AuthenticationUserStates) => state.authenticated);
      const userID = useSelector((state: AuthenticationUserStates) => state.userID);
-     const [isSessionExpired, setIsSessionExpired] = useState(false);
 
      useEffect(() => {
          const fetchSessionStatus = async () => {
-             if (isAuthenticated && userID) {
-                 try {
-                     const expired = await checkSessionExpiration(userID);
-                     setIsSessionExpired(expired);
-                 } catch (error) {
-                     console.error('Failed to fetch session status:', error);
-                 }
+             const expired = await checkSessionExpiration(userID);
+             console.log(expired)
+             if (expired) {
+                 logoutSession();
              }
          };
          fetchSessionStatus();
-     }, [isAuthenticated, userID]);
+     }, []);
+
 
      return (
          <Provider store={store}>
              <PersistGate loading={null} persistor={ persistor }>
                  <>
                      <Router>
-                         <Nav expired={isSessionExpired}/>
+                         <Nav />
                          <section className="hero is-fullheight">
                              <Routes>
                                  <Route path="/" element={<Home />} />
-                                 {isAuthenticated  && !isSessionExpired ?
+                                 {isAuthenticated ?
                                      null :
                                      (<Route path="/login-register" element={<LoginRegister />} />)
                                  }
                                  <Route path="keto-paelo" element={<KetoPaelo />} />
                                  <Route path="whole-popular" element={<WholePopular />} />
                                  <Route path="vegan-vegetarian" element={<Veg />} />
-                                 {isAuthenticated  && !isSessionExpired ?
+                                 {isAuthenticated ?
                                      (<Route path="yumms" element={<Yumms /> } />)
                                      : null }
                              </Routes>

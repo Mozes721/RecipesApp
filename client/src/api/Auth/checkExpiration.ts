@@ -9,10 +9,10 @@ export function checkSessionExpiration(userID: string | undefined) {
 
     return axios.get(serverExpirationUrl,  { params: { userID: userID } })
         .then((response) => {
-            return response.data.expired
+            return response.data
         })
         .catch((error) => {
-            throw error;
+            console.log(error)
         });
 
 }
