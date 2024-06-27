@@ -20,7 +20,7 @@ import { logoutSession } from "./hooks/removeUser";
 
      useEffect(() => {
          const fetchSessionStatus = async () => {
-             const expired = await checkSessionExpiration(userID);
+             const expired  = await checkSessionExpiration(userID);
              if (expired) {
                  logoutSession();
              }

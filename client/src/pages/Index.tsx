@@ -7,12 +7,9 @@ const Home: React.FC = () => {
             <div className="hero-body">
                 <div className="container">
                     <div className="columns is-vcentered">
-                        {/* Column for the image */}
                         <div className="column is-half">
                             <img src={logoHome} alt="RecepiesApp" className="img-responsive" />
                         </div>
-
-                        {/* Column for the text */}
                         <div className="column is-half has-text-centered">
                             <h1 className="title">
                                 Start storing your recipes

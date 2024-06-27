@@ -6,6 +6,7 @@ interface AuthenticationUserStates {
 }
 
 interface Recepie {
+    id?: string;
     userID?: string;
     title?: string;
     url?: string;
@@ -14,8 +15,13 @@ interface Recepie {
     rating?: number;
 }
 
+interface ReviewedRecepie {
+    id?: string;
+    rating?: number;
+}
+
 interface Recepies {
     recepies: Recepie[];
 }
 
-export {  AuthenticationUserStates, Recepie, Recepies };
+export {  AuthenticationUserStates, Recepie, Recepies, ReviewedRecepie };

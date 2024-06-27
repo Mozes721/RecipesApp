@@ -47,7 +47,7 @@ func checkTokenExpiration(ctx *gin.Context, client *redis.Client) {
 
 	ttl, err := client.TTL(ctx, key).Result()
 	if err != nil {
-		ctx.JSON(500, gin.H{
+		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to get TTL",
 		})
 		return
@@ -55,7 +55,5 @@ func checkTokenExpiration(ctx *gin.Context, client *redis.Client) {
 
 	expired := ttl <= 0
 
-	ctx.JSON(200, gin.H{
-		"message": expired,
-	})
+	ctx.JSON(http.StatusOK, expired)
 }

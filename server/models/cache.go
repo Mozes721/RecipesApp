@@ -15,7 +15,6 @@ type UserCache struct {
 
 func GetUserCacheToken(ctx *gin.Context, client *redis.Client, userID string) (string, error) {
 	key := fmt.Sprintf("user:%s", userID)
-
 	cache, err := client.HGetAll(ctx, key).Result()
 	if err != nil {
 		return "", fmt.Errorf("failed to get cache: %v", err)

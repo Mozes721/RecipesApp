@@ -2,8 +2,10 @@ package api
 
 import (
 	"cloud.google.com/go/firestore"
+	"fmt"
 	"github.com/RecepieApp/server/models"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func showRecepies(ctx *gin.Context, client *firestore.Client) {
@@ -11,12 +13,13 @@ func showRecepies(ctx *gin.Context, client *firestore.Client) {
 
 	data, err := models.ReadUserCollection(ctx, client, userID)
 	if err != nil {
-		ctx.JSON(404, gin.H{
+		ctx.JSON(http.StatusNotFound, gin.H{
 			"Message": "Unable to retrieve data",
 		})
+		return
 	}
 
-	ctx.JSON(200, data)
+	ctx.JSON(http.StatusOK, data)
 
 }
 
@@ -25,9 +28,10 @@ func addRecepie(ctx *gin.Context, client *firestore.Client) {
 
 	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &data)
 	if err != nil {
-		ctx.JSON(400, gin.H{
+		ctx.JSON(http.StatusConflict, gin.H{
 			"message": "Unable to parse data",
 		})
+		return
 	}
 
 	msg, status := data.AddRecepie(client)
@@ -39,29 +43,36 @@ func addRecepie(ctx *gin.Context, client *firestore.Client) {
 }
 
 func updateRecepie(ctx *gin.Context, client *firestore.Client) {
-	data := models.Recepie{}
+	data := models.RecepieUpdate{}
 
 	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &data)
 	if err != nil {
-		ctx.JSON(400, gin.H{
+		ctx.JSON(http.StatusConflict, gin.H{
 			"message": "Unable to parse data",
 		})
+		return
 	}
 
-	data.UpdateRecepie(ctx, client)
-
+	msg, status := data.UpdateRecepie(ctx, client)
+	fmt.Println()
+	ctx.JSON(status, gin.H{
+		"message": msg,
+	})
 }
 
 func deleteRecepie(ctx *gin.Context, client *firestore.Client) {
-	data := models.Recepie{}
+	recordID := ctx.Param("id")
 
-	err := models.UnmarshallRequestBodyToAPIData(ctx.Request.Body, &data)
+	err, status := models.DeleteUserRecepie(ctx, client, recordID)
 	if err != nil {
-		ctx.JSON(400, gin.H{
-			"Message": "Unable to parse data",
+		ctx.JSON(status, gin.H{
+			"error": err.Error(),
 		})
+		return
 	}
 
-	data.DeleteUserRecepie(ctx, client)
+	ctx.JSON(status, gin.H{
+		"message": "Recipe deleted successfully",
+	})
 
 }

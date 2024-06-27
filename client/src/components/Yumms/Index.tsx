@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/splide/dist/css/splide.min.css";
 import { Recepie } from '../../types/global';
-import { toastNotification } from "../toast";
 import { ReviewCard } from "./ReviewModal";
 
 interface IndexProps {
@@ -14,21 +13,9 @@ const Index: React.FC<IndexProps> = ({ recepies }) => {
     const [selectedRecepie, setSelectedRecepie] = useState<Recepie | null>(null);
 
     const handleReviewClick = (recepie: Recepie) => {
+
         setSelectedRecepie(recepie);
         setShowModal(true);
-    };
-
-    const updateRecepie = async (userID: string, title: string, made: true, rating: number) => {
-        const recepie: Recepie = {
-            userID: userID,
-            title: title,
-            made: false,
-            rating: 0
-        };
-
-
-        toastNotification('You have updated your recepie status', 'is-success');
-
     };
 
     return (
@@ -58,6 +45,13 @@ const Index: React.FC<IndexProps> = ({ recepies }) => {
                                 <div className="card-content">
                                     <div className="content">
                                         <h5>{recepie.title}</h5>
+                                        {recepie.made ?
+                                            ( <h6 className="subtitle is-6">
+                                                You have already submitted review on this recepie
+                                            </h6> )
+                                            :
+                                            null
+                                        }
                                         <div className="columns buttons is-mobile is-centered is-one-quarter">
                                             <a href={recepie.url} target="_blank" rel="noreferrer">
                                                 <span className="button is-info modal-button column is-narrow"

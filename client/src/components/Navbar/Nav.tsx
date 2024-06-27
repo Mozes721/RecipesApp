@@ -5,7 +5,7 @@ import Burger from "./SideBar";
 import {LuVegan} from "react-icons/lu";
 import {useSelector} from "react-redux";
 import { removeUser } from "../../hooks/removeUser";
-
+import { House, FileText, Door, Book, Egg } from "phosphor-react";
 
 const Nav: React.FC = () => {
     let [isActive, setIsActive] = React.useState<boolean>(false);
@@ -72,35 +72,27 @@ const Nav: React.FC = () => {
                     <div className="navbar-end">
                             <span className="navbar-item">
                             <NavLink className="button is-white is-outlined" to="/">
-                                    <span className="icon">
-                                        <i className="fa-solid fa fa-file-text-o"></i>
-                                    </span>
+                                    <FileText size={24} />
                                     <span>About Me</span>
                                 </NavLink>
                             </span>
                         <span className="navbar-item">
                                 {isAuthenticated ? null :
                                     <NavLink className="button is-white is-outlined" to="/login-register">
-                                        <span className="icon">
-                                            <i className="fa-solid fa-door-open"></i>
-                                        </span>
+                                        <Door size={24} />
                                         <span>Login/Register</span>
                                     </NavLink>
                                 }
                             </span>
                         <span className="navbar-item">
                                 <NavLink className="button is-white is-outlined" to="keto-paelo">
-                                    <span className="icon">
-                                        <i className="fa fa-superpowers"></i>
-                                    </span>
+                                    <Egg size={24} />
                                     <span>Keto&Paelo</span>
                                 </NavLink>
                             </span>
                         <span className="navbar-item">
                                 <NavLink className="button is-white is-outlined" to="whole-popular">
-                                    <span className="icon">
-                                        <i className="fa fa-book"></i>
-                                    </span>
+                                    <Book size={24} />
                                     <span>Whole&Popular</span>
                                 </NavLink>
                             </span>
@@ -113,9 +105,7 @@ const Nav: React.FC = () => {
                         <span className="navbar-item">
                                 {isAuthenticated ? (
                                     <NavLink className="button is-white is-outlined" to="yumms">
-                                        <span className="icon">
-                                            <i className="fa fa-home"></i>
-                                        </span>
+                                        <House size={24} />
                                         <span>Yumms</span>
                                     </NavLink>
                                 ) : null

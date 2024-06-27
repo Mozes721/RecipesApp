@@ -8,6 +8,7 @@ import (
 	"github.com/RecepieApp/server/utils"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
+	"net/http"
 	"time"
 )
 
@@ -16,6 +17,7 @@ type Recepies struct {
 }
 
 type Recepie struct {
+	ID       string `json:"id"`
 	UserID   string `json:"userID"`
 	Made     bool   `json:"made"`
 	Rating   int    `json:"rating"`
@@ -24,8 +26,14 @@ type Recepie struct {
 	ImageUrl string `json:"imageUrl"`
 }
 
+type RecepieUpdate struct {
+	ID     string `json:"id"`
+	Rating int    `json:"rating"`
+}
+
 func ReadUserCollection(c *gin.Context, client *firestore.Client, userID string) (Recepies, error) {
 	iter := client.Collection(utils.ProjectID).Where("UserID", "==", userID).Documents(c)
+
 	var recepies Recepies
 
 	for {
@@ -33,11 +41,14 @@ func ReadUserCollection(c *gin.Context, client *firestore.Client, userID string)
 		if errors.Is(err, iterator.Done) {
 			break
 		}
+
 		if err != nil {
 			return recepies, err
 		}
 
 		var recepie Recepie
+		recepie.ID = doc.Ref.ID
+
 		err = doc.DataTo(&recepie)
 		if err != nil {
 			fmt.Printf("Unable to unmarshal Firestore document data to struct due to %s\n", err)
@@ -58,10 +69,10 @@ func (r *Recepie) AddRecepie(client *firestore.Client) (string, int) {
 	exists := r.checkCollection(client)
 	if exists {
 		message = "Recepie is already added to your list of Yumms."
-		status = 409
+		status = http.StatusConflict
 	} else {
 		message = r.addCollectionRecepie(client)
-		status = 200
+		status = http.StatusOK
 	}
 
 	return message, status
@@ -75,8 +86,8 @@ func (r *Recepie) addCollectionRecepie(client *firestore.Client) string {
 
 	_, _, err := client.Collection(utils.ProjectID).Add(ctx, map[string]interface{}{
 		"UserID":   r.UserID,
-		"Made":     r.Made,
-		"Rating":   r.Rating,
+		"Made":     false,
+		"Rating":   0,
 		"Title":    r.Title,
 		"Url":      r.Url,
 		"ImageUrl": r.ImageUrl,
@@ -88,52 +99,34 @@ func (r *Recepie) addCollectionRecepie(client *firestore.Client) string {
 	return message
 }
 
-func (r *Recepie) UpdateRecepie(c *gin.Context, client *firestore.Client) error {
-	defer client.Close()
-	exists := r.checkCollection(client)
-	if !exists {
-		return fmt.Errorf("failed updating document: %v", exists)
-	}
-
-	_, err := client.Collection(utils.ProjectID).Doc(r.UserID+"_"+r.Title).Update(c, []firestore.Update{
-		{
-			Path:  "Made",
-			Value: r.Made,
-		},
-		{
-			Path:  "Rating",
-			Value: r.Rating,
-		},
+func (ru *RecepieUpdate) UpdateRecepie(c *gin.Context, client *firestore.Client) (string, int) {
+	docRef := client.Collection(utils.ProjectID).Doc(ru.ID)
+	_, err := docRef.Update(c.Request.Context(), []firestore.Update{
+		{Path: "Made", Value: true},
+		{Path: "Rating", Value: ru.Rating},
 	})
 	if err != nil {
-		c.JSON(400, gin.H{
-			"Message": fmt.Errorf("Failed updating document: %v", err),
-		})
+		return fmt.Sprintf("failed to update recipe: %v", err), http.StatusInternalServerError
 	}
 
-	return nil
+	return "Recipe updated successfully", http.StatusOK
 }
 
-func (r *Recepie) DeleteUserRecepie(c *gin.Context, client *firestore.Client) *firestore.DocumentSnapshot {
-	docRef := client.Collection(utils.ProjectID).Doc(r.UserID + "_" + r.Title)
+func DeleteUserRecepie(c *gin.Context, client *firestore.Client, recordID string) (error, int) {
+	docRef := client.Collection(utils.ProjectID).Doc(recordID)
 	snapshot, err := docRef.Get(c)
 	if err != nil {
-		c.JSON(500, gin.H{
-			"Message": fmt.Errorf("Failed updating document: %v", err),
-		})
+		return fmt.Errorf("failed updating document: %v", err), http.StatusInternalServerError
+
 	}
 	if !snapshot.Exists() {
-		c.JSON(404, gin.H{
-			"Message": "Recipe not found",
-		})
+		return fmt.Errorf("recipe not found"), http.StatusNotFound
 
 	}
 	_, err = docRef.Delete(c)
 	if err != nil {
-		c.JSON(300, gin.H{
-			"Message": fmt.Errorf("Failed to delete recipe: %v", err),
-		})
+		return fmt.Errorf("failed to delete recipe: %v", err), http.StatusInternalServerError
 	}
 
-	return nil
+	return nil, http.StatusOK
 }
