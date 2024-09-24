@@ -9,5 +9,5 @@ const KetoPaelo: React.FC = () => {
          <Paleo />
        </React.Fragment>
    )
-}
+} 
 export default KetoPaelo;
