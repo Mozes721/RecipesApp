@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect } from 'react';
 import  Nav  from "./components/Navbar/Nav";
 import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from "redux-persist/integration/react";
