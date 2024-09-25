@@ -1,6 +1,6 @@
 import React from 'react';
-import Vegan from '../components/Recepies/Vegan'
-import Vegetarian from '../components/Recepies/Vegetarian'
+import Vegan from '../components/recepies/Vegan'
+import Vegetarian from '../components/recepies/Vegetarian'
 
 
 const Veg: React.FC = () => {

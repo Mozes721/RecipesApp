@@ -1,6 +1,6 @@
 import React from 'react';
-import Keto from '../components/Recepies/Keto';
-import Paleo from '../components/Recepies/Paleo';
+import Keto from '../components/recepies/Keto';
+import Paleo from '../components/recepies/Paleo';
 
 const KetoPaelo: React.FC = () => {
    return (
