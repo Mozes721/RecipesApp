@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Index from '../components/Yumms/Index'
 import { useSelector } from "react-redux";
 import { getRecepies } from "../api/Yumms/Recepies";
-import {AuthenticationUserStates, Recepie, Recepies} from '../types/global'
+import {AuthenticationUserStates, Recepie} from '../types/global'
 
 const Yumms: React.FC = () => {
     const [yumms1, setYumms1] = useState<Recepie[]>([]);

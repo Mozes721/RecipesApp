@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import RegisterForm from '../components/Auth/Register'; 
 import LoginForm from '../components/Auth/Login';
 const LoginRegister: React.FC = () => {
