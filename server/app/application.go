@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"github.com/gobuffalo/envy"
+	"os"
 	"github.com/redis/go-redis/v9"
 
 	"cloud.google.com/go/firestore"
@@ -33,7 +33,10 @@ func (a *Application) LoadConfigurations() error {
 	}
 	a.FireAuth = fireAuth
 
-	a.RedisPort = envy.Get("REDIS_SERVER", "localhost:6379")
+	a.RedisPort = os.Getenv("REDIS_SERVER")
+    if a.RedisPort == "" {
+        a.RedisPort = "localhost:6379"
+    }
 
 	redisClient, err := RedisConnect(a.RedisPort)
 	if err != nil {
@@ -42,7 +45,10 @@ func (a *Application) LoadConfigurations() error {
 
 	a.RedisClient = redisClient
 
-	a.ListenPort = envy.Get("PORT", "8080")
+	a.ListenPort = os.Getenv("PORT")
+    if a.ListenPort == "" {
+        a.ListenPort = "8080"
+    }
 
 	return nil
 }

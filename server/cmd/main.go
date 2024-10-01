@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"log"  // Import the log package
+	"log" 
 	"github.com/RecepieApp/server/app"
 	"github.com/RecepieApp/server/runtime"
 )
@@ -21,5 +21,6 @@ func main() {
     if err := runtime.Start(&a); err != nil {
         log.Fatalf("Failed to start the application: %v", err)
     }
+
 }
 

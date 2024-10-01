@@ -4,7 +4,7 @@ import (
 	"firebase.google.com/go/auth"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/gobuffalo/envy"
+	"os"
 	"log"
 	"net/http"
 	"strings"
@@ -30,14 +30,19 @@ func AuthJWT(client *auth.Client, authToken string) gin.HandlerFunc {
 
 		c.Set("FIREBASE_ID_TOKEN", idToken.UID)
 		c.Next()
+	
 	}
 }
 
 func CORSMiddleware() cors.Config {
-	clientPort := envy.Get("REACT_PORT", "http://localhost:3000")
+
+	clientURL  := os.Getenv("CLIENT_PORT")
+	if clientURL  == "" {
+		clientURL  = "http://localhost:3000"
+	}
 
 	corsConfig := cors.Config{
-		AllowOrigins:     []string{clientPort},
+		AllowOrigins:     []string{clientURL },
 		AllowMethods:     []string{"*"},
 		AllowHeaders:     []string{"*"},
 		ExposeHeaders:    []string{"Content-Length"},
