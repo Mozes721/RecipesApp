@@ -33,7 +33,7 @@ func (a *Application) LoadConfigurations() error {
 	}
 	a.FireAuth = fireAuth
 
-	a.RedisPort = os.Getenv("REDIS_SERVER")
+	a.RedisPort = os.Getenv("REDIS_URL")
     if a.RedisPort == "" {
         a.RedisPort = "localhost:6379"
     }

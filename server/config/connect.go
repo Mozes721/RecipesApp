@@ -20,7 +20,7 @@ func firebaseApp(ctx context.Context) (*firebase.App, error) {
 	opt := option.WithCredentialsFile(account_key)
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
-		return nil, fmt.Errorf("firebase initialization error: %v", err)return nil, err
+		return nil, fmt.Errorf("firebase initialization error: %v", err)
 	}
 	return app, nil
 }
@@ -62,12 +62,7 @@ func redisClientPort(port string) (*redis.Client, error) {
 	}), nil
 }
 
-func RedisConnect() (*redis.Client, error) {
-	redisURL := os.Getenv("REDIS_URL")
-	if redisURL == "" {
-		redisURL = "localhost:6379"
-	}
-
+func RedisConnect(redisURL string) (*redis.Client, error) {
 	client, err := redisClientPort(redisURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Redis client: %w", err)

@@ -42,7 +42,7 @@ func CORSMiddleware() cors.Config {
 	}
 
 	corsConfig := cors.Config{
-		AllowOrigins:     []string{clientURL },
+		AllowOrigins:     []string{clientURL, "*"},
 		AllowMethods:     []string{"*"},
 		AllowHeaders:     []string{"*"},
 		ExposeHeaders:    []string{"Content-Length"},
