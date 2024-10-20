@@ -4,3 +4,9 @@ server.\env
 .env
 env
 env-variables.sh
+terraform/set-prod-env.sh
+terraform/account_key.json
+terraform/recepies_gcp.json
+terraform/.terraform
+terraform/.terraform.lock.hcl
+terraform/.terraform.tfstate.lock.info
