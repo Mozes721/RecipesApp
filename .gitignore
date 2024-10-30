@@ -6,7 +6,13 @@ env
 env-variables.sh
 terraform/set-prod-env.sh
 terraform/account_key.json
-terraform/recepies_gcp.json
 terraform/.terraform
 terraform/.terraform.lock.hcl
 terraform/.terraform.tfstate.lock.info
+
+# Ignore Terraform working directory
+terraform/.terraform/
+
+# Ignore tfstate files and backups
+*.tfstate
+*.tfstate.backup

@@ -25,6 +25,12 @@ func SetRoutes(router *gin.Engine, client *firestore.Client, auth *auth.Client, 
 		c.Status(http.StatusOK)
 	})
 
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"status": "ok",
+		})
+	})
+
 	router.Use(func(c *gin.Context) {
 		authToken := getUserCache(c, redisClient)
 		md.AuthJWT(auth, authToken)(c)

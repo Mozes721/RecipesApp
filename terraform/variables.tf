@@ -4,17 +4,13 @@ variable "project_id" {
 }
 
 variable "project_name" {
-  description = "The project name of the Google Cloud project."
+  description = "The project name of the Google Cloud Run project."
   type        = string
 }
+
 
 variable "region" {
   description = "The Google Cloud region."
-  type        = string
-}
-
-variable "gcp_iam_member" {
-  description = "IAM Policy Binding for the service account"
   type        = string
 }
 
@@ -24,10 +20,6 @@ variable "redis_url" {
   type        = string
 }
 
-variable "firebase_account_key" {
-  description = "Path to the Firebase service account key file."
-  type        = string
-}
 
 variable "client_url" {
   description = "The URL for the client application."
@@ -36,5 +28,10 @@ variable "client_url" {
 
 variable "gcp_account_key" {
   description = "Path to the Google Cloud service account key file."
+  type        = string
+}
+
+variable "firebase_account_key_location" {
+  description = "Firebase account key location in Docker container."
   type        = string
 }

@@ -1,4 +1,6 @@
 project_id = "recepies-6e7c0"
 project_name = "recipe-service"
-region     = "europe-west1"
+region     = "europe-north1"
 gcp_iam_member = "serviceAccount:service-988443547488@serverless-robot-prod.iam.gserviceaccount.com"
+gcp_account_key = "./account_key.json"
+firebase_account_key_location = "/app/config/account_key.json"
