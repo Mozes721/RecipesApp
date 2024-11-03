@@ -18,6 +18,8 @@ func Start(a *app.Application) error {
 
 	api.SetRoutes(router, a.FireClient, a.FireAuth, a.RedisClient)
 
+	
+
 	err := router.Run(":" + a.ListenPort)
 	log.Printf("Starting server on port: %s", a.ListenPort)
 	if err != nil {
